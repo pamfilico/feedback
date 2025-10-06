@@ -5,7 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import { Button, Grid, TextField, MenuItem, FormControl, InputLabel, Select, Box, Typography, useMediaQuery, useTheme, Fab, Chip } from "@mui/material";
+import { Button, TextField, MenuItem, FormControl, InputLabel, Select, Box, Typography, useMediaQuery, useTheme, Fab, Chip } from "@mui/material";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
@@ -50,18 +50,17 @@ const CanvasColumn: React.FC<CanvasColumnProps> = ({ image, canvasRef, onUploadI
   }, []);
 
   return (
-    <Grid item xs={8}>
-      <Box
-        sx={{
-          position: "relative",
-          width: "100%",
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          bgcolor: "#f5f5f5",
-        }}
-      >
+    <Box
+      sx={{
+        position: "relative",
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "#f5f5f5",
+      }}
+    >
         {image ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -139,8 +138,7 @@ const CanvasColumn: React.FC<CanvasColumnProps> = ({ image, canvasRef, onUploadI
             />
           </Box>
         </Box>
-      </Box>
-    </Grid>
+    </Box>
   );
 };
 
@@ -160,17 +158,16 @@ const DetailsColumn: React.FC<DetailsColumnProps> = ({
   formik,
 }) => {
   return (
-    <Grid item xs={4}>
-      <Box
-        sx={{
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          p: 3,
-          bgcolor: "background.paper",
-          overflowY: "auto",
-        }}
-      >
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        p: 3,
+        bgcolor: "background.paper",
+        overflowY: "auto",
+      }}
+    >
         <Button
           variant="contained"
           color="secondary"
@@ -255,8 +252,7 @@ const DetailsColumn: React.FC<DetailsColumnProps> = ({
             Submit Feedback
           </Button>
         </form>
-      </Box>
-    </Grid>
+    </Box>
   );
 };
 
@@ -317,10 +313,10 @@ export function MaterialFeedbackButton({
         pixelRatio: 1,
         skipFonts: true, // Skip font embedding to avoid CORS issues
         skipAutoScale: true,
-        filter: (node) => {
+        filter: (node: HTMLElement) => {
           // Skip ProseMirror separator images and other problematic elements
           if (node.classList?.contains('ProseMirror-separator')) return false;
-          if (node.tagName === 'IMG' && node.src?.includes('data:')) return false;
+          if (node.tagName === 'IMG' && (node as HTMLImageElement).src?.includes('data:')) return false;
           return true;
         },
       });

@@ -1,11 +1,23 @@
-# Feedback Package
+# @pamfilico/feedback
 
 A collection of feedback components for various UI frameworks.
 
 ## Installation
 
+### React 19 / Next.js 15+ Projects
+
+Due to peer dependency constraints with `react-canvas-draw` (which currently supports React 16-17), you need to install with the `--legacy-peer-deps` flag:
+
 ```bash
-npm install feedback
+npm install @pamfilico/feedback --legacy-peer-deps
+```
+
+**Note:** The package works perfectly fine with React 19 at runtime. The flag is only needed because `react-canvas-draw` hasn't updated its peer dependency requirements yet.
+
+### React 18 / Next.js 14 Projects
+
+```bash
+npm install @pamfilico/feedback
 ```
 
 ## Usage
@@ -13,7 +25,7 @@ npm install feedback
 ### Material UI Feedback Button
 
 ```tsx
-import { MaterialFeedbackButton } from "feedback/material";
+import { MaterialFeedbackButton } from "@pamfilico/feedback/material";
 
 function App() {
   return (
