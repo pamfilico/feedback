@@ -4,6 +4,23 @@
   "description": "Feedback components for Material UI and other frameworks",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./material": {
+      "types": "./dist/material/index.d.ts",
+      "import": "./dist/material/index.js",
+      "require": "./dist/material/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "material": ["./dist/material/index.d.ts"]
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
