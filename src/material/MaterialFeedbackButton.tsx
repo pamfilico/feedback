@@ -263,13 +263,15 @@ export interface MaterialFeedbackButtonProps {
   apiBasePath?: string;
   additionalHeaders?: Record<string, string>;
   hideIfNoEmail?: boolean;
+  appId?: string;
 }
 
 export function MaterialFeedbackButton({
   userEmail = null,
   apiBasePath = "/api/feedback",
   additionalHeaders = {},
-  hideIfNoEmail = false
+  hideIfNoEmail = false,
+  appId
 }: MaterialFeedbackButtonProps) {
   const [image, setImage] = useState<string>("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -390,6 +392,7 @@ export function MaterialFeedbackButton({
           drawings,
           user_email: userEmail,
           material_ui_screensize: getScreenSize(),
+          app_id: appId,
         };
 
         const response = await fetch(apiBasePath, {
