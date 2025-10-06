@@ -1,0 +1,39 @@
+{
+  "name": "feedback",
+  "version": "1.0.0",
+  "description": "Feedback components for Material UI and other frameworks",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "feedback",
+    "material-ui",
+    "react",
+    "component"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.1",
+    "@mui/material": "^7.3.1",
+    "formik": "^2.4.6",
+    "html-to-image": "^1.11.13",
+    "next": "15.4.6",
+    "react": "19.1.0",
+    "react-canvas-draw": "^1.2.1",
+    "react-dom": "19.1.0",
+    "react-hot-toast": "^2.4.1",
+    "yup": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "5.7.3"
+  }
+}
