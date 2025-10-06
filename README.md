@@ -33,6 +33,7 @@ function App() {
       userEmail="user@example.com"
       apiBasePath="/api/feedback"
       additionalHeaders={{ "Authorization": "Bearer token" }}
+      appId="my-app"
     />
   );
 }
@@ -56,6 +57,7 @@ A feedback button component built with Material UI that allows users to:
 | `apiBasePath` | `string` | `"/api/feedback"` | API endpoint for feedback submission |
 | `additionalHeaders` | `Record<string, string>` | `{}` | Additional headers for API requests |
 | `hideIfNoEmail` | `boolean` | `false` | Hide button if no email provided |
+| `appId` | `string` | `undefined` | Application identifier for tracking feedback source |
 
 ## Features
 
