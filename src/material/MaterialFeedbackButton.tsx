@@ -264,6 +264,7 @@ export interface MaterialFeedbackButtonProps {
   additionalHeaders?: Record<string, string>;
   hideIfNoEmail?: boolean;
   appId?: string;
+  formAsDialog?: boolean;
 }
 
 export function MaterialFeedbackButton({
@@ -271,11 +272,13 @@ export function MaterialFeedbackButton({
   apiBasePath = "/api/feedback",
   additionalHeaders = {},
   hideIfNoEmail = false,
-  appId
+  appId,
+  formAsDialog = false,
 }: MaterialFeedbackButtonProps) {
   const [image, setImage] = useState<string>("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const canvasRef = useRef<any>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -358,6 +361,7 @@ export function MaterialFeedbackButton({
     console.log('[MaterialFeedbackButton] handleClose called');
     setDialogOpen(false);
     setDrawerOpen(false);
+    setFormDialogOpen(false);
     formik.resetForm();
   }, []);
 
@@ -523,8 +527,12 @@ export function MaterialFeedbackButton({
             color="primary"
             aria-label="save feedback"
             onClick={() => {
-              console.log('[MaterialFeedbackButton] Save FAB clicked, opening drawer');
-              setDrawerOpen(true);
+              console.log('[MaterialFeedbackButton] Save FAB clicked, opening', formAsDialog ? 'dialog' : 'drawer');
+              if (formAsDialog) {
+                setFormDialogOpen(true);
+              } else {
+                setDrawerOpen(true);
+              }
             }}
             size="medium"
             sx={{
@@ -571,7 +579,6 @@ export function MaterialFeedbackButton({
                 height: "100%",
                 boxSizing: 'border-box',
                 zIndex: 1400,
-                backgroundColor: 'red !important', // Temporary debug color
               },
             }}
             onTransitionEnter={() => console.log('[MaterialFeedbackButton] Drawer transition ENTER')}
@@ -664,6 +671,112 @@ export function MaterialFeedbackButton({
               </form>
             </Box>
           </Drawer>
+
+          {/* Form as Dialog variant */}
+          <Dialog
+            open={formDialogOpen}
+            onClose={() => setFormDialogOpen(false)}
+            maxWidth="sm"
+            fullWidth
+            sx={{
+              '& .MuiDialog-paper': {
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }
+            }}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Submit Feedback
+              </Typography>
+
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={clearDrawing}
+                fullWidth
+                sx={{ mb: 2 }}
+              >
+                Reset Drawing
+              </Button>
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={undoLastDrawing}
+                fullWidth
+                sx={{ mb: 2 }}
+              >
+                Undo
+              </Button>
+
+              <form onSubmit={formik.handleSubmit}>
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="formDialog-feedbackType-label">Feedback Type</InputLabel>
+                  <Select
+                    labelId="formDialog-feedbackType-label"
+                    id="formDialog-feedbackType"
+                    name="feedbackType"
+                    value={formik.values.feedbackType}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.feedbackType &&
+                      Boolean(formik.errors.feedbackType)
+                    }
+                    label="Feedback Type"
+                  >
+                    <MenuItem value="bug">Bug</MenuItem>
+                    <MenuItem value="feature">Feature Request</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                  </Select>
+                  {formik.touched.feedbackType && formik.errors.feedbackType && (
+                    <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 0.5 }}>
+                      {formik.errors.feedbackType}
+                    </Box>
+                  )}
+                </FormControl>
+
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  id="formDialog-description"
+                  name="description"
+                  label="Description"
+                  multiline
+                  rows={8}
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.description && Boolean(formik.errors.description)
+                  }
+                  helperText={
+                    formik.touched.description && formik.errors.description
+                  }
+                />
+
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => setFormDialogOpen(false)}
+                    fullWidth
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    fullWidth
+                    type="submit"
+                  >
+                    Submit Feedback
+                  </Button>
+                </Box>
+              </form>
+            </Box>
+          </Dialog>
 
           <Box sx={{ width: "100%", height: "100%", position: "relative", bgcolor: "#f5f5f5", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {image ? (

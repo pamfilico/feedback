@@ -33,6 +33,10 @@ const meta = {
       control: 'text',
       description: 'Application ID for tracking',
     },
+    formAsDialog: {
+      control: 'boolean',
+      description: 'Show form as a centered dialog instead of a drawer',
+    },
   },
 } satisfies Meta<typeof MaterialFeedbackButton>;
 
@@ -42,6 +46,7 @@ type Story = StoryObj<typeof meta>;
 /**
  * Simple feedback button that appears fixed in the bottom right corner.
  * Click to capture screenshot, draw annotations, and submit feedback.
+ * Form appears as a right-side drawer.
  */
 export const Default: Story = {
   args: {
@@ -49,5 +54,20 @@ export const Default: Story = {
     apiBasePath: '/api/v1/feedback',
     additionalHeaders: {},
     hideIfNoEmail: false,
+    formAsDialog: false,
+  },
+};
+
+/**
+ * Feedback button with form displayed as a centered dialog instead of a drawer.
+ * This variant is useful when you want the form to be more prominent and centered.
+ */
+export const FormAsDialog: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    additionalHeaders: {},
+    hideIfNoEmail: false,
+    formAsDialog: true,
   },
 };
