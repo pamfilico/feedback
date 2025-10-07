@@ -39,7 +39,7 @@ const meta = {
     },
     placement: {
       control: 'select',
-      options: ['bottom-right', 'bottom-left', 'bottom-center', 'top-right', 'top-left', 'top-center', 'parent'],
+      options: ['bottom-right', 'bottom-left', 'bottom-center', 'top-right', 'top-left', 'top-center', 'right-middle', 'left-middle', 'parent'],
       description: 'Button placement on screen',
     },
   },
@@ -131,6 +131,28 @@ export const TopCenter: Story = {
     userEmail: 'user@example.com',
     apiBasePath: '/api/v1/feedback',
     placement: 'top-center',
+  },
+};
+
+/**
+ * Button positioned at right-middle (rotated vertically).
+ */
+export const RightMiddle: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'right-middle',
+  },
+};
+
+/**
+ * Button positioned at left-middle (rotated vertically).
+ */
+export const LeftMiddle: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'left-middle',
   },
 };
 

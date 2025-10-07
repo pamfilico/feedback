@@ -265,6 +265,8 @@ export type PlacementType =
   | 'top-right'
   | 'top-left'
   | 'top-center'
+  | 'right-middle'
+  | 'left-middle'
   | 'parent';
 
 export interface MaterialFeedbackButtonProps {
@@ -486,6 +488,10 @@ export function MaterialFeedbackButton({
         return { ...baseStyles, top: 20, left: 20 };
       case 'top-center':
         return { ...baseStyles, top: 20, left: '50%', transform: 'translateX(-50%)' };
+      case 'right-middle':
+        return { ...baseStyles, right: 0, top: '50%', transform: 'translateY(-50%) rotate(-90deg)', transformOrigin: 'right center' };
+      case 'left-middle':
+        return { ...baseStyles, left: 0, top: '50%', transform: 'translateY(-50%) rotate(90deg)', transformOrigin: 'left center' };
       default:
         return { ...baseStyles, bottom: 20, right: 20 };
     }
@@ -502,12 +508,20 @@ export function MaterialFeedbackButton({
           ...getPositionStyles(),
           backgroundColor: "white",
           padding: "10px 20px",
+          minWidth: { xs: 'auto', sm: 'auto' },
         }}
         color="error"
         onClick={captureScreenshot}
       >
-        Feedback
-        <FeedbackIcon sx={{ marginLeft: 1 }} />
+        <Box
+          component="span"
+          sx={{
+            display: { xs: 'none', sm: 'inline' },
+          }}
+        >
+          Feedback
+        </Box>
+        <FeedbackIcon sx={{ marginLeft: { xs: 0, sm: 1 } }} />
       </Button>
 
       <Dialog

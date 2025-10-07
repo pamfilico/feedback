@@ -137,6 +137,10 @@ Position the feedback button anywhere on screen:
 <MaterialFeedbackButton placement="top-left" />
 <MaterialFeedbackButton placement="top-center" />
 
+// Side positions (rotated vertically)
+<MaterialFeedbackButton placement="right-middle" />
+<MaterialFeedbackButton placement="left-middle" />
+
 // Parent positioning - use as inline button
 <div className="my-toolbar">
   <button>Save</button>
@@ -145,7 +149,10 @@ Position the feedback button anywhere on screen:
 </div>
 ```
 
-The `parent` placement makes the button follow normal document flow instead of being fixed, perfect for toolbars or inline usage.
+**Features:**
+- The `parent` placement makes the button follow normal document flow instead of being fixed, perfect for toolbars or inline usage
+- Side placements (`right-middle`, `left-middle`) are automatically rotated 90° for vertical display
+- On small screens (< 600px), only the icon is shown to save space
 
 ## Components
 
@@ -174,7 +181,7 @@ A floating feedback button that opens a fullscreen dialog for creating feedback.
 | `hideIfNoEmail` | `boolean` | `false` | Hide button if no email provided |
 | `appId` | `string` | `undefined` | Application identifier for tracking |
 | `formAsDialog` | `boolean` | `false` | Show form as centered dialog instead of drawer |
-| `placement` | `'bottom-right' \| 'bottom-left' \| 'bottom-center' \| 'top-right' \| 'top-left' \| 'top-center' \| 'parent'` | `'bottom-right'` | Button position on screen. Use 'parent' for inline positioning |
+| `placement` | `'bottom-right' \| 'bottom-left' \| 'bottom-center' \| 'top-right' \| 'top-left' \| 'top-center' \| 'right-middle' \| 'left-middle' \| 'parent'` | `'bottom-right'` | Button position on screen. Side positions are rotated vertically. Use 'parent' for inline positioning |
 
 #### Submission Data Schema
 
