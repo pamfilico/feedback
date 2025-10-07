@@ -15,6 +15,11 @@ npm run build
 # Watch mode for development
 npm run dev
 
+# Storybook for component development and testing
+npm run storybook              # Run Storybook dev server on port 6006
+npm run build-storybook        # Build static Storybook (includes GitHub Pages fix)
+npm run deploy-storybook       # Deploy to GitHub Pages (gh-pages branch)
+
 # Release new versions (automatically builds and publishes)
 npm run release:patch  # 1.0.x -> 1.0.(x+1)
 npm run release:minor  # 1.0.x -> 1.(x+1).0
@@ -30,6 +35,9 @@ npm run release:major  # 1.x.x -> (x+1).0.0
   - `@pamfilico/feedback/material`: Direct Material UI component access
 - **Source**: All component code is in `src/material/`
 - **Build**: TypeScript compiles to `dist/` with declaration files
+- **Storybook stories**: Co-located with components (e.g., `MaterialFeedbackButton.stories.tsx`)
+- **Mock API handlers**: `src/mocks/handlers.ts` (MSW configuration)
+- **Public assets**: `public/mockServiceWorker.js` (MSW service worker)
 
 ### Key Components
 
@@ -98,6 +106,26 @@ See README.md for complete API schema documentation.
 
 For React 19 / Next.js 15+ projects, requires `--legacy-peer-deps` flag due to `react-canvas-draw` peer dependency constraints (works fine at runtime).
 
+### Storybook & Testing
+
+- **Storybook**: Used for component development and visual testing
+- **MSW (Mock Service Worker)**: API mocking configured in `src/mocks/handlers.ts`
+- **Mock Data**: `mockFeedbackItems` array in `handlers.ts` provides realistic feedback data
+  - **IMPORTANT**: `mockFeedbackItems` is a flat array `[{...}, {...}]`, NOT nested `[[{...}]]`
+  - Stories access items via `mockFeedbackItems[0]`, `mockFeedbackItems[1]`, etc.
+- **GitHub Pages**: Storybook deployed to gh-pages branch with special service worker path handling
+  - `fix-github-pages.js` script adjusts paths for GitHub Pages deployment
+  - MSW loader detects GitHub Pages and adjusts service worker URL accordingly
+
+**For complete Storybook setup instructions, see [docs/STORYBOOK_PACKAGE_SETUP.md](docs/STORYBOOK_PACKAGE_SETUP.md)**
+
+### Mock Data Structure
+
+When working with mock data in `src/mocks/handlers.ts`:
+- Keep `mockFeedbackItems` as a flat array of feedback objects
+- Each object should have: `id`, `user_email`, `type_of`, `message`, `image`, `drawings`, `current_url`, `material_ui_screensize`, etc.
+- Stories and tests reference items directly: `mockFeedbackItems[0]`, not `mockFeedbackItems[0][0]`
+
 ## Development Guidelines
 
 - Maintain "use client" directive in client-side components
@@ -105,3 +133,5 @@ For React 19 / Next.js 15+ projects, requires `--legacy-peer-deps` flag due to `
 - Preserve snake_case/camelCase field naming conventions for API compatibility
 - Use MUI breakpoints for responsive behavior, not CSS media queries
 - Always include device type detection in new feedback-related components
+- When updating mock data, ensure `mockFeedbackItems` remains a flat array structure
+- Test Storybook locally before deploying to ensure MSW mocks work correctly
