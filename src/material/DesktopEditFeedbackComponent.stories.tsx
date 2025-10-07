@@ -45,7 +45,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const Default: Story = {
   args: {
-    feedback: mockFeedbackItems[0][0],
+    feedback: mockFeedbackItems[0],
     apiBaseUrl: '',
     additionalHeaders: {},
   },

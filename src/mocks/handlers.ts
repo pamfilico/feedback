@@ -2,8 +2,7 @@ import { http, HttpResponse, delay } from "msw";
 
 // Mock feedback data based on actual API format from user's example
 export const mockFeedbackItems = [
-  [
-    {
+  {
       commit_hash: null,
       created_at: "2025-10-06T18:21:45.905601+00:00",
       current_url:
@@ -2285,7 +2284,6 @@ export const mockFeedbackItems = [
       user_id: "3db75d5b-819b-4a0d-8b7f-70004a83164f",
       user_name: "George Pamfilis",
     },
-  ],
 ];
 
 export const handlers = [
