@@ -202,6 +202,7 @@ export default function DesktopEditFeedbackComponent({ feedback, onUpdate, onCan
                       width: "100%",
                       height: "100%",
                       zIndex: 2,
+                      pointerEvents: "auto",
                     }}
                   >
                     <CanvasDraw
@@ -213,6 +214,8 @@ export default function DesktopEditFeedbackComponent({ feedback, onUpdate, onCan
                       lazyRadius={0}
                       hideGrid={true}
                       saveData={savedDrawingData || ""}
+                      backgroundColor="transparent"
+                      immediateLoading={true}
                     />
                   </Box>
                 </Box>
