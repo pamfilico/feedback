@@ -44,6 +44,8 @@ function App() {
 
 A floating feedback button that opens a fullscreen dialog for creating feedback. When clicked, it automatically captures a screenshot of the current page and opens a dialog where users can draw annotations on the screenshot and submit their feedback.
 
+![Feedback Submission Example](./image.png)
+
 **Key Features:**
 - 📸 **Automatic screenshot capture** - Captures the entire page when the button is clicked
 - ✏️ **Interactive annotation canvas** - Draw directly on the screenshot with customizable brush
