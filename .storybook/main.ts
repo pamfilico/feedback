@@ -16,12 +16,7 @@ const config: StorybookConfig = {
     "name": "@storybook/nextjs",
     "options": {}
   },
-  "staticDirs": [
-    {
-      from: '../public',
-      to: '/feedback'
-    }
-  ],
+  "staticDirs": ["../public"],
   // Configure for GitHub Pages deployment with subdirectory
   "managerWebpack": async (config) => {
     if (process.env.NODE_ENV === 'production') {
