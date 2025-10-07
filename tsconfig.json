@@ -16,7 +16,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "noImplicitReturns": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
