@@ -300,6 +300,13 @@ export function MaterialFeedbackButton({
 
   useEffect(() => {
     console.log('[MaterialFeedbackButton] drawerOpen state changed to:', drawerOpen);
+    if (drawerOpen) {
+      console.log('[MaterialFeedbackButton] dialogRef.current:', dialogRef.current);
+      console.log('[MaterialFeedbackButton] Dialog dimensions:', {
+        width: dialogRef.current?.clientWidth,
+        height: dialogRef.current?.clientHeight,
+      });
+    }
   }, [drawerOpen]);
 
   // Hide button if email is required but not present
@@ -543,17 +550,15 @@ export function MaterialFeedbackButton({
             variant="temporary"
             ModalProps={{
               keepMounted: true,
-              container: () => {
-                const dialog = document.querySelector('[role="dialog"]');
-                console.log('[MaterialFeedbackButton] Drawer container query result:', dialog);
-                return dialog as HTMLElement;
-              },
+              container: dialogRef.current,
+              disablePortal: false,
             }}
             slotProps={{
               backdrop: {
                 sx: {
                   position: 'absolute',
                   zIndex: 1300,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }
               }
             }}
@@ -566,8 +571,11 @@ export function MaterialFeedbackButton({
                 height: "100%",
                 boxSizing: 'border-box',
                 zIndex: 1400,
+                backgroundColor: 'red !important', // Temporary debug color
               },
             }}
+            onTransitionEnter={() => console.log('[MaterialFeedbackButton] Drawer transition ENTER')}
+            onTransitionExited={() => console.log('[MaterialFeedbackButton] Drawer transition EXITED')}
           >
             <Box sx={{ height: "100%", bgcolor: "background.paper", overflowY: "auto", p: 3 }}>
               <Button
