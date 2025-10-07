@@ -5,11 +5,13 @@ import { Toaster } from 'react-hot-toast';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import React from 'react';
 
-// Initialize MSW with correct service worker path for GitHub Pages
+// Initialize MSW with correct service worker path
+// Detect if running on GitHub Pages by checking the pathname
+const isGitHubPages = typeof window !== 'undefined' && window.location.pathname.startsWith('/feedback');
 initialize({
   onUnhandledRequest: 'bypass',
   serviceWorker: {
-    url: process.env.NODE_ENV === 'production' ? '/feedback/mockServiceWorker.js' : '/mockServiceWorker.js',
+    url: isGitHubPages ? '/feedback/mockServiceWorker.js' : '/mockServiceWorker.js',
   },
 });
 

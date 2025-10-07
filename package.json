@@ -33,8 +33,8 @@
     "release:minor": "npm version minor && npm run build && npm publish --access public",
     "release:major": "npm version major && npm run build && npm publish --access public",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "deploy-storybook": "gh-pages -d storybook-static -b gh-pages"
+    "build-storybook": "storybook build && node .storybook/fix-github-pages.js",
+    "deploy-storybook": "npm run build-storybook && gh-pages -d storybook-static -b gh-pages --dotfiles"
   },
   "keywords": [
     "feedback",
