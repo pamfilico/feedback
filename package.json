@@ -1,6 +1,6 @@
 {
   "name": "@pamfilico/feedback",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Feedback components for Material UI and other frameworks",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
