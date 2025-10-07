@@ -5,9 +5,12 @@ import { Toaster } from 'react-hot-toast';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import React from 'react';
 
-// Initialize MSW
+// Initialize MSW with correct service worker path for GitHub Pages
 initialize({
   onUnhandledRequest: 'bypass',
+  serviceWorker: {
+    url: process.env.NODE_ENV === 'production' ? '/feedback/mockServiceWorker.js' : '/mockServiceWorker.js',
+  },
 });
 
 // Create Material-UI theme

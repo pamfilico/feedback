@@ -16,6 +16,26 @@ const config: StorybookConfig = {
     "name": "@storybook/nextjs",
     "options": {}
   },
-  "staticDirs": ["../public"]
+  "staticDirs": [
+    {
+      from: '../public',
+      to: '/feedback'
+    }
+  ],
+  // Configure for GitHub Pages deployment with subdirectory
+  "managerWebpack": async (config) => {
+    if (process.env.NODE_ENV === 'production') {
+      config.output = config.output || {};
+      config.output.publicPath = '/feedback/';
+    }
+    return config;
+  },
+  "webpackFinal": async (config) => {
+    if (process.env.NODE_ENV === 'production') {
+      config.output = config.output || {};
+      config.output.publicPath = '/feedback/';
+    }
+    return config;
+  },
 };
 export default config;
