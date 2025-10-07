@@ -278,6 +278,7 @@ export function MaterialFeedbackButton({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const canvasRef = useRef<any>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Detect screen size using MUI breakpoints
   const theme = useTheme();
@@ -296,6 +297,10 @@ export function MaterialFeedbackButton({
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    console.log('[MaterialFeedbackButton] drawerOpen state changed to:', drawerOpen);
+  }, [drawerOpen]);
 
   // Hide button if email is required but not present
   if (hideIfNoEmail && !userEmail) {
@@ -456,6 +461,7 @@ export function MaterialFeedbackButton({
       </Button>
 
       <Dialog
+        ref={dialogRef}
         open={dialogOpen}
         onClose={handleClose}
         fullScreen
@@ -537,14 +543,29 @@ export function MaterialFeedbackButton({
             variant="temporary"
             ModalProps={{
               keepMounted: true,
-              container: () => document.querySelector('[role="dialog"]'),
+              container: () => {
+                const dialog = document.querySelector('[role="dialog"]');
+                console.log('[MaterialFeedbackButton] Drawer container query result:', dialog);
+                return dialog as HTMLElement;
+              },
+            }}
+            slotProps={{
+              backdrop: {
+                sx: {
+                  position: 'absolute',
+                  zIndex: 1300,
+                }
+              }
             }}
             sx={{
+              position: 'absolute',
+              zIndex: 1400,
               '& .MuiDrawer-paper': {
                 width: 400,
                 position: "absolute",
                 height: "100%",
                 boxSizing: 'border-box',
+                zIndex: 1400,
               },
             }}
           >
