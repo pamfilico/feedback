@@ -122,6 +122,31 @@ export default async function RootLayout({ children }) {
 }
 ```
 
+#### Button Placement
+
+Position the feedback button anywhere on screen:
+
+```tsx
+// Bottom positions
+<MaterialFeedbackButton placement="bottom-right" />  // Default
+<MaterialFeedbackButton placement="bottom-left" />
+<MaterialFeedbackButton placement="bottom-center" />
+
+// Top positions
+<MaterialFeedbackButton placement="top-right" />
+<MaterialFeedbackButton placement="top-left" />
+<MaterialFeedbackButton placement="top-center" />
+
+// Parent positioning - use as inline button
+<div className="my-toolbar">
+  <button>Save</button>
+  <button>Cancel</button>
+  <MaterialFeedbackButton placement="parent" userEmail="user@example.com" />
+</div>
+```
+
+The `parent` placement makes the button follow normal document flow instead of being fixed, perfect for toolbars or inline usage.
+
 ## Components
 
 ### MaterialFeedbackButton
@@ -149,6 +174,7 @@ A floating feedback button that opens a fullscreen dialog for creating feedback.
 | `hideIfNoEmail` | `boolean` | `false` | Hide button if no email provided |
 | `appId` | `string` | `undefined` | Application identifier for tracking |
 | `formAsDialog` | `boolean` | `false` | Show form as centered dialog instead of drawer |
+| `placement` | `'bottom-right' \| 'bottom-left' \| 'bottom-center' \| 'top-right' \| 'top-left' \| 'top-center' \| 'parent'` | `'bottom-right'` | Button position on screen. Use 'parent' for inline positioning |
 
 #### Submission Data Schema
 

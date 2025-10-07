@@ -258,6 +258,15 @@ const DetailsColumn: React.FC<DetailsColumnProps> = ({
 
 DetailsColumn.displayName = "DetailsColumn";
 
+export type PlacementType =
+  | 'bottom-right'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'top-right'
+  | 'top-left'
+  | 'top-center'
+  | 'parent';
+
 export interface MaterialFeedbackButtonProps {
   userEmail?: string | null;
   apiBasePath?: string;
@@ -265,6 +274,7 @@ export interface MaterialFeedbackButtonProps {
   hideIfNoEmail?: boolean;
   appId?: string;
   formAsDialog?: boolean;
+  placement?: PlacementType;
 }
 
 export function MaterialFeedbackButton({
@@ -274,6 +284,7 @@ export function MaterialFeedbackButton({
   hideIfNoEmail = false,
   appId,
   formAsDialog = false,
+  placement = 'bottom-right',
 }: MaterialFeedbackButtonProps) {
   const [image, setImage] = useState<string>("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -449,6 +460,37 @@ export function MaterialFeedbackButton({
     },
   });
 
+  // Get positioning styles based on placement
+  const getPositionStyles = () => {
+    if (placement === 'parent') {
+      return {
+        position: 'relative' as const,
+      };
+    }
+
+    const baseStyles = {
+      position: 'fixed' as const,
+      zIndex: 1000,
+    };
+
+    switch (placement) {
+      case 'bottom-right':
+        return { ...baseStyles, bottom: 20, right: 20 };
+      case 'bottom-left':
+        return { ...baseStyles, bottom: 20, left: 20 };
+      case 'bottom-center':
+        return { ...baseStyles, bottom: 20, left: '50%', transform: 'translateX(-50%)' };
+      case 'top-right':
+        return { ...baseStyles, top: 20, right: 20 };
+      case 'top-left':
+        return { ...baseStyles, top: 20, left: 20 };
+      case 'top-center':
+        return { ...baseStyles, top: 20, left: '50%', transform: 'translateX(-50%)' };
+      default:
+        return { ...baseStyles, bottom: 20, right: 20 };
+    }
+  };
+
   if (!isClient) {
     return null;
   }
@@ -457,12 +499,9 @@ export function MaterialFeedbackButton({
     <>
       <Button
         sx={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
+          ...getPositionStyles(),
           backgroundColor: "white",
           padding: "10px 20px",
-          zIndex: 1000,
         }}
         color="error"
         onClick={captureScreenshot}

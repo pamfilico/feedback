@@ -37,6 +37,11 @@ const meta = {
       control: 'boolean',
       description: 'Show form as a centered dialog instead of a drawer',
     },
+    placement: {
+      control: 'select',
+      options: ['bottom-right', 'bottom-left', 'bottom-center', 'top-right', 'top-left', 'top-center', 'parent'],
+      description: 'Button placement on screen',
+    },
   },
 } satisfies Meta<typeof MaterialFeedbackButton>;
 
@@ -55,6 +60,7 @@ export const Default: Story = {
     additionalHeaders: {},
     hideIfNoEmail: false,
     formAsDialog: false,
+    placement: 'bottom-right',
   },
 };
 
@@ -69,5 +75,81 @@ export const FormAsDialog: Story = {
     additionalHeaders: {},
     hideIfNoEmail: false,
     formAsDialog: true,
+    placement: 'bottom-right',
   },
+};
+
+/**
+ * Button positioned at bottom-left corner.
+ */
+export const BottomLeft: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'bottom-left',
+  },
+};
+
+/**
+ * Button positioned at bottom-center.
+ */
+export const BottomCenter: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'bottom-center',
+  },
+};
+
+/**
+ * Button positioned at top-right corner.
+ */
+export const TopRight: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'top-right',
+  },
+};
+
+/**
+ * Button positioned at top-left corner.
+ */
+export const TopLeft: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'top-left',
+  },
+};
+
+/**
+ * Button positioned at top-center.
+ */
+export const TopCenter: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'top-center',
+  },
+};
+
+/**
+ * Button with parent positioning (relative) - can be used inline within your layout.
+ * This variant renders as a regular button that follows normal document flow.
+ */
+export const ParentPositioning: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'parent',
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ padding: '20px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <p>This button uses parent positioning and flows with the layout:</p>
+        <Story />
+      </div>
+    ),
+  ],
 };
