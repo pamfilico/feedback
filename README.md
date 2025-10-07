@@ -20,7 +20,7 @@ npm install @pamfilico/feedback --legacy-peer-deps
 npm install @pamfilico/feedback
 ```
 
-## Usage
+## Quick Start
 
 ### Material UI Feedback Button
 
@@ -34,6 +34,90 @@ function App() {
       apiBasePath="/api/v1/feedback"
       additionalHeaders={{ "Authorization": "Bearer token" }}
     />
+  );
+}
+```
+
+### Examples
+
+#### Basic Usage (Drawer Variant)
+```tsx
+import { MaterialFeedbackButton } from "@pamfilico/feedback/material";
+
+export default function MyApp() {
+  return (
+    <>
+      {/* Your app content */}
+      <MaterialFeedbackButton
+        userEmail="user@example.com"
+        apiBasePath="/api/v1/feedback"
+      />
+    </>
+  );
+}
+```
+
+#### Dialog Variant (Centered Form)
+If you prefer a centered dialog form instead of a right-side drawer:
+
+```tsx
+<MaterialFeedbackButton
+  userEmail="user@example.com"
+  apiBasePath="/api/v1/feedback"
+  formAsDialog={true}  // Shows form as centered dialog
+/>
+```
+
+#### With Authentication
+```tsx
+<MaterialFeedbackButton
+  userEmail={session?.user?.email}
+  apiBasePath="/api/v1/feedback"
+  additionalHeaders={{
+    "Authorization": `Bearer ${token}`,
+    "X-Custom-Header": "value"
+  }}
+/>
+```
+
+#### Conditional Display
+```tsx
+<MaterialFeedbackButton
+  userEmail={user?.email}
+  apiBasePath="/api/v1/feedback"
+  hideIfNoEmail={true}  // Only show if user is logged in
+/>
+```
+
+#### With App ID Tracking
+```tsx
+<MaterialFeedbackButton
+  userEmail="user@example.com"
+  apiBasePath="/api/v1/feedback"
+  appId="my-app-production"  // Track which app sent feedback
+/>
+```
+
+#### Next.js App Router Example
+```tsx
+// app/layout.tsx
+import { MaterialFeedbackButton } from "@pamfilico/feedback/material";
+import { auth } from "@/lib/auth";
+
+export default async function RootLayout({ children }) {
+  const session = await auth();
+
+  return (
+    <html>
+      <body>
+        {children}
+        <MaterialFeedbackButton
+          userEmail={session?.user?.email}
+          apiBasePath="/api/v1/feedback"
+          formAsDialog={true}
+        />
+      </body>
+    </html>
   );
 }
 ```
@@ -60,9 +144,11 @@ A floating feedback button that opens a fullscreen dialog for creating feedback.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `userEmail` | `string \| null` | `null` | User's email address |
-| `apiBasePath` | `string` | `"/api/v1/feedback"` | API endpoint for feedback submission |
+| `apiBasePath` | `string` | `"/api/feedback"` | API endpoint for feedback submission |
 | `additionalHeaders` | `Record<string, string>` | `{}` | Additional headers for API requests |
 | `hideIfNoEmail` | `boolean` | `false` | Hide button if no email provided |
+| `appId` | `string` | `undefined` | Application identifier for tracking |
+| `formAsDialog` | `boolean` | `false` | Show form as centered dialog instead of drawer |
 
 #### Submission Data Schema
 
