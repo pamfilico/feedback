@@ -304,9 +304,14 @@ export function MaterialFeedbackButton({
 
   // Function to capture screenshot using html-to-image
   const captureScreenshot = async () => {
-    if (typeof window === "undefined") return;
+    console.log('[MaterialFeedbackButton] captureScreenshot called');
+    if (typeof window === "undefined") {
+      console.log('[MaterialFeedbackButton] window is undefined, returning');
+      return;
+    }
 
     try {
+      console.log('[MaterialFeedbackButton] Starting screenshot capture');
       // Import html-to-image dynamically
       const { toPng } = await import("html-to-image");
 
@@ -323,11 +328,14 @@ export function MaterialFeedbackButton({
         },
       });
 
+      console.log('[MaterialFeedbackButton] Screenshot captured successfully, length:', screenshot.length);
       setImage(screenshot);
+      console.log('[MaterialFeedbackButton] Setting dialogOpen to true');
       setDialogOpen(true);
     } catch (error) {
-      console.error("Failed to take screenshot:", error);
+      console.error("[MaterialFeedbackButton] Failed to take screenshot:", error);
       setImage(""); // Set empty image to show placeholder
+      console.log('[MaterialFeedbackButton] Setting dialogOpen to true (fallback)');
       setDialogOpen(true); // Still open dialog
       setDrawerOpen(true); // Auto-open drawer so user can fill form
       toast.error("Failed to capture screenshot");
@@ -335,6 +343,7 @@ export function MaterialFeedbackButton({
   };
 
   const handleClose = useCallback(() => {
+    console.log('[MaterialFeedbackButton] handleClose called');
     setDialogOpen(false);
     setDrawerOpen(false);
     formik.resetForm();
@@ -374,6 +383,7 @@ export function MaterialFeedbackButton({
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      console.log('[MaterialFeedbackButton] Form submit started', values);
       try {
         const currentUrl = window.location.href;
         let drawings = null;
@@ -395,6 +405,7 @@ export function MaterialFeedbackButton({
           app_id: appId,
         };
 
+        console.log('[MaterialFeedbackButton] Submitting feedback to:', apiBasePath);
         const response = await fetch(apiBasePath, {
           method: "POST",
           headers: {
@@ -409,12 +420,14 @@ export function MaterialFeedbackButton({
           throw new Error(errorData.error || "Failed to submit feedback");
         }
 
+        console.log('[MaterialFeedbackButton] Feedback submitted successfully');
         toast.success("Feedback submitted successfully!");
         formik.resetForm();
+        console.log('[MaterialFeedbackButton] Closing dialog after submit');
         setDialogOpen(false);
         setImage("");
       } catch (error) {
-        console.error("Error submitting feedback:", error);
+        console.error("[MaterialFeedbackButton] Error submitting feedback:", error);
         toast.error(error instanceof Error ? error.message : "Failed to submit feedback. Please try again.");
       }
     },
@@ -442,7 +455,13 @@ export function MaterialFeedbackButton({
         <FeedbackIcon sx={{ marginLeft: 1 }} />
       </Button>
 
-      <Dialog open={dialogOpen} onClose={handleClose} fullScreen>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleClose}
+        fullScreen
+        onTransitionEnter={() => console.log('[MaterialFeedbackButton] Dialog transition enter')}
+        onTransitionExited={() => console.log('[MaterialFeedbackButton] Dialog transition exited')}
+      >
         <Box sx={{
           m: 0,
           p: 2,
@@ -490,7 +509,10 @@ export function MaterialFeedbackButton({
           <Fab
             color="primary"
             aria-label="save feedback"
-            onClick={() => setDrawerOpen(true)}
+            onClick={() => {
+              console.log('[MaterialFeedbackButton] Save FAB clicked, opening drawer');
+              setDrawerOpen(true);
+            }}
             size="medium"
             sx={{
               animation: "wiggle 2s ease-in-out infinite",
@@ -508,7 +530,10 @@ export function MaterialFeedbackButton({
           <Drawer
             anchor="right"
             open={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
+            onClose={() => {
+              console.log('[MaterialFeedbackButton] Drawer close triggered');
+              setDrawerOpen(false);
+            }}
             variant="temporary"
             ModalProps={{
               keepMounted: true,
