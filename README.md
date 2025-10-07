@@ -31,9 +31,8 @@ function App() {
   return (
     <MaterialFeedbackButton
       userEmail="user@example.com"
-      apiBasePath="/api/feedback"
+      apiBasePath="/api/v1/feedback"
       additionalHeaders={{ "Authorization": "Bearer token" }}
-      appId="my-app"
     />
   );
 }
@@ -59,10 +58,9 @@ A floating feedback button that opens a fullscreen dialog for creating feedback.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `userEmail` | `string \| null` | `null` | User's email address |
-| `apiBasePath` | `string` | `"/api/feedback"` | API endpoint for feedback submission |
+| `apiBasePath` | `string` | `"/api/v1/feedback"` | API endpoint for feedback submission |
 | `additionalHeaders` | `Record<string, string>` | `{}` | Additional headers for API requests |
 | `hideIfNoEmail` | `boolean` | `false` | Hide button if no email provided |
-| `appId` | `string` | `undefined` | Application identifier for tracking feedback source |
 
 #### Submission Data Schema
 
@@ -70,10 +68,10 @@ When a user submits feedback, the component sends a POST request to your API end
 
 ```typescript
 {
-  userEmail: string | null;           // User's email address
-  feedbackType: "bug" | "feature" | "other";  // Type of feedback
+  user_email: string | null;           // User's email address
+  feedbackType: "bug" | "feature" | "other";  // Type of feedback (camelCase for compatibility)
   description: string;                 // User's feedback description
-  screenshotBase64: string;           // Base64 encoded screenshot image (data:image/png;base64,...)
+  image: string;                       // Base64 encoded screenshot image (data:image/png;base64,...)
   drawings: {                         // Canvas drawing data for annotations
     lines: Array<{
       points: Array<{x: number, y: number}>;
@@ -83,19 +81,18 @@ When a user submits feedback, the component sends a POST request to your API end
     width: number;                    // Canvas width
     height: number;                   // Canvas height
   } | null;
-  currentUrl: string;                 // URL where feedback was submitted
-  materialUiScreensize: "mobile" | "tablet" | "desktop";  // Device type
-  appId?: string;                     // Application identifier (if provided)
+  current_url: string;                 // URL where feedback was submitted
+  material_ui_screensize: "mobile" | "tablet" | "desktop";  // Device type
 }
 ```
 
 **Example Submission:**
 ```json
 {
-  "userEmail": "user@example.com",
+  "user_email": "user@example.com",
   "feedbackType": "bug",
   "description": "The submit button is not working on the checkout page",
-  "screenshotBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...",
+  "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...",
   "drawings": {
     "lines": [
       {
@@ -107,9 +104,8 @@ When a user submits feedback, the component sends a POST request to your API end
     "width": 1920,
     "height": 1080
   },
-  "currentUrl": "https://example.com/checkout",
-  "materialUiScreensize": "desktop",
-  "appId": "my-app"
+  "current_url": "https://example.com/checkout",
+  "material_ui_screensize": "desktop"
 }
 ```
 
@@ -221,7 +217,7 @@ Same as `DesktopEditFeedbackComponent`.
 
 All feedback components expect your backend API to implement these endpoints:
 
-### POST `{apiBasePath}` (e.g., `/api/feedback`)
+### POST `/api/v1/feedback`
 **Used by:** MaterialFeedbackButton
 
 Creates a new feedback submission.
@@ -229,11 +225,12 @@ Creates a new feedback submission.
 **Request Body:**
 ```typescript
 {
-  userEmail: string | null;
-  feedbackType: "bug" | "feature" | "other";
-  description: string;
-  screenshotBase64: string;          // Full data URL with base64 image
-  drawings: {
+  user_email: string | null;          // Optional - user's email
+  feedbackType: "bug" | "feature" | "other";  // Optional - type of feedback
+  description: string;                // Optional - feedback description
+  image: string;                      // Optional - base64 data URL or S3 URL
+  current_url: string;                // Optional - URL where feedback submitted
+  drawings: {                         // Optional - drawing annotation data
     lines: Array<{
       points: Array<{x: number, y: number}>;
       brushColor: string;
@@ -242,9 +239,8 @@ Creates a new feedback submission.
     width: number;
     height: number;
   } | null;
-  currentUrl: string;
-  materialUiScreensize: "mobile" | "tablet" | "desktop";
-  appId?: string;
+  material_ui_screensize: "mobile" | "tablet" | "desktop";  // Optional - device type
+  softwarefast_task_id: string;      // Optional - external task tracker ID
 }
 ```
 
@@ -252,9 +248,13 @@ Creates a new feedback submission.
 ```json
 {
   "success": true,
+  "message": "Feedback received!",
   "data": {
-    "id": "feedback-uuid-here",
-    "message": "Feedback submitted successfully"
+    "id": "uuid-string",
+    "user_id": "uuid-string",
+    "type_of": "bug",
+    "message": "Description text",
+    "created_at": "2025-01-01T12:00:00"
   }
 }
 ```
@@ -401,7 +401,7 @@ Updates an existing feedback item.
 ### Storage Recommendations
 
 **Screenshot Storage:**
-- When receiving `screenshotBase64` from MaterialFeedbackButton, decode and store the image in your cloud storage (S3, Cloud Storage, etc.)
+- When receiving `image` field from MaterialFeedbackButton (base64 data URL), decode and store the image in your cloud storage (S3, Cloud Storage, etc.)
 - Store the public URL in the `image` field of your database
 - Return the URL (not base64) in GET responses to reduce payload size
 - When updating feedback, accept either base64 data URLs or existing URLs in the `image` field
