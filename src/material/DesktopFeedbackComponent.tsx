@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -14,18 +14,11 @@ import TabletIcon from "@mui/icons-material/Tablet";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import toast from "react-hot-toast";
+import { getTranslations, type Locale } from "../locales";
 
 const CanvasDraw = dynamic(() => import("react-canvas-draw"), {
   ssr: false,
   loading: () => <div>Loading canvas...</div>,
-});
-
-const validationSchema = yup.object({
-  feedbackType: yup.string().required("Feedback type is required"),
-  description: yup
-    .string()
-    .min(10, "Description should be at least 10 characters long")
-    .required("Description is required"),
 });
 
 export interface DesktopFeedbackComponentProps {
@@ -37,6 +30,7 @@ export interface DesktopFeedbackComponentProps {
   appId?: string;
   formAsDialog?: boolean;
   screenSize: "mobile" | "tablet" | "desktop";
+  locale?: Locale;
 }
 
 export function DesktopFeedbackComponent({
@@ -48,6 +42,7 @@ export function DesktopFeedbackComponent({
   appId,
   formAsDialog = false,
   screenSize,
+  locale = 'en',
 }: DesktopFeedbackComponentProps) {
   const [image, setImage] = useState<string>("");
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -55,20 +50,30 @@ export function DesktopFeedbackComponent({
   const canvasRef = useRef<any>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
+  const t = useMemo(() => getTranslations(locale), [locale]);
+
+  const validationSchema = useMemo(() => yup.object({
+    feedbackType: yup.string().required(t.feedback.form.feedbackTypeRequired),
+    description: yup
+      .string()
+      .min(10, t.feedback.form.descriptionMinLength)
+      .required(t.feedback.form.descriptionRequired),
+  }), [t]);
+
   const handleUploadImage = useCallback((file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result;
       if (typeof result === 'string') {
         setImage(result);
-        toast.success("Screenshot uploaded successfully");
+        toast.success(t.feedback.notifications.screenshotUploaded);
       }
     };
     reader.onerror = () => {
-      toast.error("Failed to upload screenshot");
+      toast.error(t.feedback.notifications.screenshotFailed);
     };
     reader.readAsDataURL(file);
-  }, []);
+  }, [t]);
 
   const clearDrawing = useCallback(() => {
     if (canvasRef.current) {
@@ -130,13 +135,13 @@ export function DesktopFeedbackComponent({
           throw new Error(errorData.error || "Failed to submit feedback");
         }
 
-        toast.success("Feedback submitted successfully!");
+        toast.success(t.feedback.notifications.submitSuccess);
         formik.resetForm();
         setImage("");
         handleCloseInternal();
       } catch (error) {
         console.error("Error submitting feedback:", error);
-        toast.error(error instanceof Error ? error.message : "Failed to submit feedback. Please try again.");
+        toast.error(error instanceof Error ? error.message : t.feedback.notifications.submitError);
       }
     },
   });
@@ -164,9 +169,9 @@ export function DesktopFeedbackComponent({
       console.error("Failed to take screenshot:", error);
       setImage("");
       setDrawerOpen(true);
-      toast.error("Failed to capture screenshot");
+      toast.error(t.feedback.notifications.screenshotCaptureFailed);
     }
-  }, []);
+  }, [t]);
 
   React.useEffect(() => {
     if (open) {
@@ -218,7 +223,7 @@ export function DesktopFeedbackComponent({
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Chip
             icon={getScreenIcon()}
-            label={screenSize.toUpperCase()}
+            label={t.feedback.screenSize[screenSize]}
             color={getScreenColor() as any}
             size="small"
           />
@@ -231,7 +236,7 @@ export function DesktopFeedbackComponent({
               fontStyle: "italic",
             }}
           >
-            💡 You can draw on the screenshot
+            {t.feedback.header.drawHint}
           </Box>
         </Box>
         <Fab
@@ -297,7 +302,7 @@ export function DesktopFeedbackComponent({
               fullWidth
               sx={{ mb: 2 }}
             >
-              Reset Drawing
+              {t.feedback.drawing.resetButton}
             </Button>
 
             <Button
@@ -307,7 +312,7 @@ export function DesktopFeedbackComponent({
               fullWidth
               sx={{ mb: 2 }}
             >
-              Undo
+              {t.feedback.drawing.undoButton}
             </Button>
 
             <Button
@@ -317,12 +322,12 @@ export function DesktopFeedbackComponent({
               fullWidth
               sx={{ mb: 3 }}
             >
-              Close Form
+              {t.feedback.drawing.closeFormButton}
             </Button>
 
             <form onSubmit={formik.handleSubmit}>
               <FormControl fullWidth margin="normal">
-                <InputLabel id="feedbackType-label">Feedback Type</InputLabel>
+                <InputLabel id="feedbackType-label">{t.feedback.form.feedbackTypeLabel}</InputLabel>
                 <Select
                   labelId="feedbackType-label"
                   id="feedbackType"
@@ -333,11 +338,11 @@ export function DesktopFeedbackComponent({
                     formik.touched.feedbackType &&
                     Boolean(formik.errors.feedbackType)
                   }
-                  label="Feedback Type"
+                  label={t.feedback.form.feedbackTypeLabel}
                 >
-                  <MenuItem value="bug">Bug</MenuItem>
-                  <MenuItem value="feature">Feature Request</MenuItem>
-                  <MenuItem value="other">Other</MenuItem>
+                  <MenuItem value="bug">{t.feedback.form.feedbackTypeBug}</MenuItem>
+                  <MenuItem value="feature">{t.feedback.form.feedbackTypeFeature}</MenuItem>
+                  <MenuItem value="other">{t.feedback.form.feedbackTypeOther}</MenuItem>
                 </Select>
                 {formik.touched.feedbackType && formik.errors.feedbackType && (
                   <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 0.5 }}>
@@ -351,7 +356,7 @@ export function DesktopFeedbackComponent({
                 margin="normal"
                 id="description"
                 name="description"
-                label="Description"
+                label={t.feedback.form.descriptionLabel}
                 multiline
                 rows={8}
                 value={formik.values.description}
@@ -371,7 +376,7 @@ export function DesktopFeedbackComponent({
                 type="submit"
                 sx={{ mt: 2 }}
               >
-                Submit Feedback
+                {t.feedback.form.submitButton}
               </Button>
             </form>
           </Box>
@@ -393,7 +398,7 @@ export function DesktopFeedbackComponent({
         >
           <Box sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
-              Submit Feedback
+              {t.feedback.form.title}
             </Typography>
 
             <Button
@@ -403,7 +408,7 @@ export function DesktopFeedbackComponent({
               fullWidth
               sx={{ mb: 2 }}
             >
-              Reset Drawing
+              {t.feedback.drawing.resetButton}
             </Button>
 
             <Button
@@ -413,12 +418,12 @@ export function DesktopFeedbackComponent({
               fullWidth
               sx={{ mb: 2 }}
             >
-              Undo
+              {t.feedback.drawing.undoButton}
             </Button>
 
             <form onSubmit={formik.handleSubmit}>
               <FormControl fullWidth margin="normal">
-                <InputLabel id="formDialog-feedbackType-label">Feedback Type</InputLabel>
+                <InputLabel id="formDialog-feedbackType-label">{t.feedback.form.feedbackTypeLabel}</InputLabel>
                 <Select
                   labelId="formDialog-feedbackType-label"
                   id="formDialog-feedbackType"
@@ -429,11 +434,11 @@ export function DesktopFeedbackComponent({
                     formik.touched.feedbackType &&
                     Boolean(formik.errors.feedbackType)
                   }
-                  label="Feedback Type"
+                  label={t.feedback.form.feedbackTypeLabel}
                 >
-                  <MenuItem value="bug">Bug</MenuItem>
-                  <MenuItem value="feature">Feature Request</MenuItem>
-                  <MenuItem value="other">Other</MenuItem>
+                  <MenuItem value="bug">{t.feedback.form.feedbackTypeBug}</MenuItem>
+                  <MenuItem value="feature">{t.feedback.form.feedbackTypeFeature}</MenuItem>
+                  <MenuItem value="other">{t.feedback.form.feedbackTypeOther}</MenuItem>
                 </Select>
                 {formik.touched.feedbackType && formik.errors.feedbackType && (
                   <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 0.5 }}>
@@ -447,7 +452,7 @@ export function DesktopFeedbackComponent({
                 margin="normal"
                 id="formDialog-description"
                 name="description"
-                label="Description"
+                label={t.feedback.form.descriptionLabel}
                 multiline
                 rows={8}
                 value={formik.values.description}
@@ -467,7 +472,7 @@ export function DesktopFeedbackComponent({
                   onClick={() => setFormDialogOpen(false)}
                   fullWidth
                 >
-                  Cancel
+                  {t.feedback.form.cancelButton}
                 </Button>
                 <Button
                   color="primary"
@@ -475,7 +480,7 @@ export function DesktopFeedbackComponent({
                   fullWidth
                   type="submit"
                 >
-                  Submit Feedback
+                  {t.feedback.form.submitButton}
                 </Button>
               </Box>
             </form>
@@ -533,17 +538,17 @@ export function DesktopFeedbackComponent({
           ) : (
             <Box sx={{ textAlign: "center", px: 4 }}>
               <Typography variant="h6" color="text.secondary" gutterBottom>
-                Failed to capture screenshot
+                {t.feedback.screenshot.failed}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 2, mb: 3 }}>
-                Exit this screen, take a manual screenshot, and upload it by clicking the button below.
+                {t.feedback.screenshot.uploadManual}
               </Typography>
               <Button
                 variant="contained"
                 component="label"
                 sx={{ mt: 2 }}
               >
-                Upload Screenshot
+                {t.feedback.screenshot.uploadButton}
                 <input
                   type="file"
                   hidden

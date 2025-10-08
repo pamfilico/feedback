@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button, Box, useMediaQuery, useTheme } from "@mui/material";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import { DesktopFeedbackComponent } from "./DesktopFeedbackComponent";
 import { MobileFeedbackComponent } from "./MobileFeedbackComponent";
+import { getTranslations, type Locale } from "../locales";
 
 export type PlacementType =
   | 'bottom-right'
@@ -25,6 +26,7 @@ export interface MaterialFeedbackButtonProps {
   formAsDialog?: boolean;
   placement?: PlacementType;
   color?: 'error' | 'primary' | 'secondary' | 'success' | 'info' | 'warning';
+  locale?: Locale;
 }
 
 export function MaterialFeedbackButton({
@@ -36,6 +38,7 @@ export function MaterialFeedbackButton({
   formAsDialog = false,
   placement = 'bottom-right',
   color = 'error',
+  locale = 'en',
 }: MaterialFeedbackButtonProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -44,6 +47,8 @@ export function MaterialFeedbackButton({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
+  const t = useMemo(() => getTranslations(locale), [locale]);
 
   const getScreenSize = (): "mobile" | "tablet" | "desktop" => {
     if (isMobile) return "mobile";
@@ -119,7 +124,7 @@ export function MaterialFeedbackButton({
             display: { xs: 'none', sm: 'inline' },
           }}
         >
-          Feedback
+          {t.feedback.button.text}
         </Box>
         <FeedbackIcon sx={{ marginLeft: { xs: 0, sm: 1 } }} />
       </Button>
@@ -133,6 +138,7 @@ export function MaterialFeedbackButton({
           additionalHeaders={additionalHeaders}
           appId={appId}
           screenSize={getScreenSize()}
+          locale={locale}
         />
       ) : (
         <DesktopFeedbackComponent
@@ -144,6 +150,7 @@ export function MaterialFeedbackButton({
           appId={appId}
           formAsDialog={formAsDialog}
           screenSize={getScreenSize()}
+          locale={locale}
         />
       )}
     </>

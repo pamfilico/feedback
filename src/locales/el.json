@@ -1,0 +1,50 @@
+{
+  "feedback": {
+    "button": {
+      "text": "Σχόλια"
+    },
+    "header": {
+      "drawHint": "💡 Μπορείτε να σχεδιάσετε στο στιγμιότυπο οθόνης",
+      "drawHintMobile": "💡 Σχεδιάστε στο στιγμιότυπο"
+    },
+    "screenshot": {
+      "failed": "Αποτυχία λήψης στιγμιότυπου οθόνης",
+      "uploadManual": "Κλείστε αυτή την οθόνη, τραβήξτε ένα στιγμιότυπο οθόνης χειροκίνητα και ανεβάστε το κάνοντας κλικ στο παρακάτω κουμπί.",
+      "uploadManualMobile": "Ανεβάστε ένα στιγμιότυπο οθόνης χειροκίνητα",
+      "uploadButton": "Ανέβασμα Στιγμιότυπου Οθόνης",
+      "uploadButtonShort": "Ανέβασμα"
+    },
+    "drawing": {
+      "resetButton": "Επαναφορά Σχεδίου",
+      "resetButtonShort": "Επαναφορά",
+      "undoButton": "Αναίρεση",
+      "closeFormButton": "Κλείσιμο Φόρμας",
+      "closeButton": "Κλείσιμο"
+    },
+    "form": {
+      "title": "Υποβολή Σχολίων",
+      "feedbackTypeLabel": "Τύπος Σχολίων",
+      "feedbackTypeRequired": "Ο τύπος σχολίων είναι υποχρεωτικός",
+      "feedbackTypeBug": "Σφάλμα",
+      "feedbackTypeFeature": "Αίτημα Λειτουργίας",
+      "feedbackTypeOther": "Άλλο",
+      "descriptionLabel": "Περιγραφή",
+      "descriptionRequired": "Η περιγραφή είναι υποχρεωτική",
+      "descriptionMinLength": "Η περιγραφή πρέπει να έχει τουλάχιστον 10 χαρακτήρες",
+      "submitButton": "Υποβολή Σχολίων",
+      "cancelButton": "Ακύρωση"
+    },
+    "notifications": {
+      "screenshotUploaded": "Το στιγμιότυπο οθόνης ανέβηκε με επιτυχία",
+      "screenshotFailed": "Αποτυχία ανεβάσματος στιγμιότυπου οθόνης",
+      "screenshotCaptureFailed": "Αποτυχία λήψης στιγμιότυπου οθόνης",
+      "submitSuccess": "Τα σχόλια υποβλήθηκαν με επιτυχία!",
+      "submitError": "Αποτυχία υποβολής σχολίων. Παρακαλώ δοκιμάστε ξανά."
+    },
+    "screenSize": {
+      "mobile": "ΚΙΝΗΤΟ",
+      "tablet": "ΤΑΜΠΛΕΤΑ",
+      "desktop": "ΥΠΟΛΟΓΙΣΤΗΣ"
+    }
+  }
+}

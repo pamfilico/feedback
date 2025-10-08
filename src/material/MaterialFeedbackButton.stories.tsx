@@ -47,6 +47,11 @@ const meta = {
       options: ['error', 'primary', 'secondary', 'success', 'info', 'warning'],
       description: 'Button color theme (defaults to error/red)',
     },
+    locale: {
+      control: 'select',
+      options: ['en', 'el'],
+      description: 'Language locale for translations (en: English, el: Greek)',
+    },
   },
 } satisfies Meta<typeof MaterialFeedbackButton>;
 
@@ -195,5 +200,31 @@ export const MobileViewport: Story = {
     viewport: {
       defaultViewport: 'mobile1',
     },
+  },
+};
+
+/**
+ * English locale variant.
+ * Displays all feedback UI text in English (default).
+ */
+export const EnglishLocale: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'bottom-right',
+    locale: 'en',
+  },
+};
+
+/**
+ * Greek locale variant (Ελληνικά).
+ * Displays all feedback UI text in Greek including form labels, buttons, notifications, and validation messages.
+ */
+export const GreekLocale: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'bottom-right',
+    locale: 'el',
   },
 };
