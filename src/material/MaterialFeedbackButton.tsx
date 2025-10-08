@@ -489,9 +489,9 @@ export function MaterialFeedbackButton({
       case 'top-center':
         return { ...baseStyles, top: 20, left: '50%', transform: 'translateX(-50%)' };
       case 'right-middle':
-        return { ...baseStyles, right: 0, top: '50%', transform: 'translateY(-50%) rotate(-90deg)', transformOrigin: 'right center' };
+        return { ...baseStyles, right: 20, top: '50%', transform: 'translateY(-50%) rotate(-90deg)', transformOrigin: 'right center' };
       case 'left-middle':
-        return { ...baseStyles, left: 0, top: '50%', transform: 'translateY(-50%) rotate(90deg)', transformOrigin: 'left center' };
+        return { ...baseStyles, left: 20, top: '50%', transform: 'translateY(-50%) rotate(90deg)', transformOrigin: 'left center' };
       default:
         return { ...baseStyles, bottom: 20, right: 20 };
     }
