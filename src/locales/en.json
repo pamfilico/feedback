@@ -9,12 +9,10 @@
     },
     "screenshot": {
       "failed": "Failed to capture screenshot",
-      "uploadManual": "Exit this screen, take a manual screenshot, and upload it by clicking the button below.",
-      "uploadManualMobile": "Upload a screenshot manually",
+      "uploadManual": "Please try exiting this dialog and re-entering. If that doesn't work, take a manual screenshot and upload it using the button below. Sorry for the inconvenience.",
+      "uploadManualMobile": "Try exiting and re-entering. If that doesn't work, upload a screenshot manually. Sorry for the inconvenience.",
       "uploadButton": "Upload Screenshot",
-      "uploadButtonShort": "Upload",
-      "tryAgainButton": "Try Again",
-      "tryAgainButtonShort": "Retry"
+      "uploadButtonShort": "Upload"
     },
     "drawing": {
       "resetButton": "Reset Drawing",

@@ -30,7 +30,6 @@ export interface MobileFeedbackComponentProps {
   appId?: string;
   screenSize: "mobile" | "tablet" | "desktop";
   locale?: Locale;
-  onRetryScreenshot?: () => void;
 }
 
 export function MobileFeedbackComponent({
@@ -42,7 +41,6 @@ export function MobileFeedbackComponent({
   appId,
   screenSize,
   locale = 'en',
-  onRetryScreenshot,
 }: MobileFeedbackComponentProps) {
   const [image, setImage] = useState<string>("");
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -339,38 +337,24 @@ export function MobileFeedbackComponent({
               <Typography variant="caption" color="text.secondary" sx={{ mb: 2 }}>
                 {t.feedback.screenshot.uploadManualMobile}
               </Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                  onClick={() => {
-                    if (onRetryScreenshot) {
-                      onRetryScreenshot();
+              <Button
+                variant="contained"
+                component="label"
+                size="small"
+              >
+                {t.feedback.screenshot.uploadButtonShort}
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleUploadImage(file);
                     }
                   }}
-                >
-                  {t.feedback.screenshot.tryAgainButtonShort}
-                </Button>
-                <Button
-                  variant="contained"
-                  component="label"
-                  size="small"
-                >
-                  {t.feedback.screenshot.uploadButtonShort}
-                  <input
-                    type="file"
-                    hidden
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        handleUploadImage(file);
-                      }
-                    }}
-                  />
-                </Button>
-              </Box>
+                />
+              </Button>
             </Box>
           )}
         </Box>
