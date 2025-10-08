@@ -548,24 +548,32 @@ export function DesktopFeedbackComponent({
               <Typography variant="body2" color="text.secondary" sx={{ mt: 2, mb: 3 }}>
                 {t.feedback.screenshot.uploadManual}
               </Typography>
-              <Button
-                variant="contained"
-                component="label"
-                sx={{ mt: 2 }}
-              >
-                {t.feedback.screenshot.uploadButton}
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      handleUploadImage(file);
-                    }
-                  }}
-                />
-              </Button>
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 2 }}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={captureScreenshot}
+                >
+                  {t.feedback.screenshot.tryAgainButton}
+                </Button>
+                <Button
+                  variant="contained"
+                  component="label"
+                >
+                  {t.feedback.screenshot.uploadButton}
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        handleUploadImage(file);
+                      }
+                    }}
+                  />
+                </Button>
+              </Box>
             </Box>
           )}
         </Box>

@@ -12,7 +12,9 @@
       "uploadManual": "Exit this screen, take a manual screenshot, and upload it by clicking the button below.",
       "uploadManualMobile": "Upload a screenshot manually",
       "uploadButton": "Upload Screenshot",
-      "uploadButtonShort": "Upload"
+      "uploadButtonShort": "Upload",
+      "tryAgainButton": "Try Again",
+      "tryAgainButtonShort": "Retry"
     },
     "drawing": {
       "resetButton": "Reset Drawing",

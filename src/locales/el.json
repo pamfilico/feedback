@@ -12,7 +12,9 @@
       "uploadManual": "Κλείστε αυτή την οθόνη, τραβήξτε ένα στιγμιότυπο οθόνης χειροκίνητα και ανεβάστε το κάνοντας κλικ στο παρακάτω κουμπί.",
       "uploadManualMobile": "Ανεβάστε ένα στιγμιότυπο οθόνης χειροκίνητα",
       "uploadButton": "Ανέβασμα Στιγμιότυπου Οθόνης",
-      "uploadButtonShort": "Ανέβασμα"
+      "uploadButtonShort": "Ανέβασμα",
+      "tryAgainButton": "Δοκιμάστε Ξανά",
+      "tryAgainButtonShort": "Ξανά"
     },
     "drawing": {
       "resetButton": "Επαναφορά Σχεδίου",
