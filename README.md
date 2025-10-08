@@ -154,6 +154,87 @@ Position the feedback button anywhere on screen:
 - Side placements (`right-middle`, `left-middle`) are automatically rotated 90° for vertical display
 - On small screens (< 600px), only the icon is shown to save space
 
+#### Button Color Customization
+
+Customize the button color to match your app's theme:
+
+```tsx
+// Red (default)
+<MaterialFeedbackButton color="error" userEmail="user@example.com" />
+
+// Blue
+<MaterialFeedbackButton color="primary" userEmail="user@example.com" />
+
+// Green
+<MaterialFeedbackButton color="success" userEmail="user@example.com" />
+
+// Orange
+<MaterialFeedbackButton color="warning" userEmail="user@example.com" />
+
+// Purple
+<MaterialFeedbackButton color="secondary" userEmail="user@example.com" />
+
+// Light Blue
+<MaterialFeedbackButton color="info" userEmail="user@example.com" />
+```
+
+#### Internationalization (i18n)
+
+The component supports multiple languages out of the box. All UI text, form labels, validation messages, and notifications are translatable:
+
+```tsx
+// English (default)
+<MaterialFeedbackButton
+  userEmail="user@example.com"
+  locale="en"
+/>
+
+// Greek (Ελληνικά)
+<MaterialFeedbackButton
+  userEmail="user@example.com"
+  locale="el"
+/>
+```
+
+**Supported Languages:**
+- `en` - English (default)
+- `el` - Greek (Ελληνικά)
+
+**What gets translated:**
+- Button text
+- Form labels and placeholders
+- Validation error messages
+- Feedback type options (Bug, Feature Request, Other)
+- Drawing tool buttons (Reset, Undo, Close)
+- Success/error notifications
+- Screen size labels (Mobile, Tablet, Desktop)
+- All help text and instructions
+
+**Adding new languages:**
+
+To add support for additional languages:
+
+1. Create a new translation file in `src/locales/[language-code].json`
+2. Copy the structure from `en.json` and translate all values
+3. Update the `Locale` type in `src/locales/index.ts` to include your language code
+4. Import and add your translations to the `translations` object
+
+Example for Spanish (`es`):
+```typescript
+// src/locales/index.ts
+import enTranslations from './en.json';
+import elTranslations from './el.json';
+import esTranslations from './es.json'; // Your new translation
+
+export type Locale = 'en' | 'el' | 'es'; // Add 'es'
+
+const translations: Record<Locale, Translations> = {
+  en: enTranslations,
+  el: elTranslations,
+  es: esTranslations, // Add your translations
+};
+```
+
 ## Components
 
 ### MaterialFeedbackButton
@@ -170,6 +251,9 @@ A floating feedback button that opens a fullscreen dialog for creating feedback.
 - 📱 **Device detection** - Automatically detects and stores device type (mobile/tablet/desktop)
 - 🔄 **Manual upload fallback** - If auto-capture fails, users can upload their own screenshot
 - 🌐 **URL tracking** - Automatically captures the current URL where feedback was submitted
+- 🎨 **Customizable button color** - Choose from error, primary, secondary, success, info, or warning colors
+- 🌍 **Internationalization (i18n)** - Built-in support for multiple languages (English and Greek included)
+- 📱 **Mobile-optimized UI** - Separate mobile and desktop components with optimized layouts
 
 #### Props
 
@@ -180,8 +264,10 @@ A floating feedback button that opens a fullscreen dialog for creating feedback.
 | `additionalHeaders` | `Record<string, string>` | `{}` | Additional headers for API requests |
 | `hideIfNoEmail` | `boolean` | `false` | Hide button if no email provided |
 | `appId` | `string` | `undefined` | Application identifier for tracking |
-| `formAsDialog` | `boolean` | `false` | Show form as centered dialog instead of drawer |
+| `formAsDialog` | `boolean` | `false` | Show form as centered dialog instead of drawer (desktop only) |
 | `placement` | `'bottom-right' \| 'bottom-left' \| 'bottom-center' \| 'top-right' \| 'top-left' \| 'top-center' \| 'right-middle' \| 'left-middle' \| 'parent'` | `'bottom-right'` | Button position on screen. Side positions are rotated vertically. Use 'parent' for inline positioning |
+| `color` | `'error' \| 'primary' \| 'secondary' \| 'success' \| 'info' \| 'warning'` | `'error'` | Button color theme (red, blue, purple, green, light blue, orange) |
+| `locale` | `'en' \| 'el'` | `'en'` | Language locale for UI text. Supports English ('en') and Greek ('el') |
 
 #### Submission Data Schema
 
