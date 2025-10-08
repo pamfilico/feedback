@@ -106,8 +106,11 @@ export function MaterialFeedbackButton({
           backgroundColor: "white",
           padding: "10px 20px",
           minWidth: { xs: 'auto', sm: 'auto' },
+          color: `${color}.main`,
+          '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          },
         }}
-        color={color}
         onClick={() => setDialogOpen(true)}
       >
         <Box
