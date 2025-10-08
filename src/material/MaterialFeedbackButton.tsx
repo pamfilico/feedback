@@ -18,10 +18,10 @@ export type PlacementType =
   | 'parent';
 
 export interface MaterialFeedbackButtonProps {
-  userEmail?: string | null;
+  meta?: Record<string, any> | null;
   apiBasePath?: string;
   additionalHeaders?: Record<string, string>;
-  hideIfNoEmail?: boolean;
+  hideIfNoMeta?: boolean;
   appId?: string;
   formAsDialog?: boolean;
   placement?: PlacementType;
@@ -30,10 +30,10 @@ export interface MaterialFeedbackButtonProps {
 }
 
 export function MaterialFeedbackButton({
-  userEmail = null,
+  meta = null,
   apiBasePath = "/api/feedback",
   additionalHeaders = {},
-  hideIfNoEmail = false,
+  hideIfNoMeta = false,
   appId,
   formAsDialog = false,
   placement = 'bottom-right',
@@ -62,7 +62,7 @@ export function MaterialFeedbackButton({
     setIsClient(true);
   }, []);
 
-  if (hideIfNoEmail && !userEmail) {
+  if (hideIfNoMeta && !meta) {
     return null;
   }
 
@@ -135,7 +135,7 @@ export function MaterialFeedbackButton({
         <MobileFeedbackComponent
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
-          userEmail={userEmail}
+          meta={meta}
           apiBasePath={apiBasePath}
           additionalHeaders={additionalHeaders}
           appId={appId}
@@ -146,7 +146,7 @@ export function MaterialFeedbackButton({
         <DesktopFeedbackComponent
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
-          userEmail={userEmail}
+          meta={meta}
           apiBasePath={apiBasePath}
           additionalHeaders={additionalHeaders}
           appId={appId}

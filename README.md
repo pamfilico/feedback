@@ -30,7 +30,7 @@ import { MaterialFeedbackButton } from "@pamfilico/feedback/material";
 function App() {
   return (
     <MaterialFeedbackButton
-      userEmail="user@example.com"
+      meta={{ user_email: "user@example.com", visitor_id: "abc123" }}
       apiBasePath="/api/v1/feedback"
       additionalHeaders={{ "Authorization": "Bearer token" }}
     />
@@ -49,7 +49,7 @@ export default function MyApp() {
     <>
       {/* Your app content */}
       <MaterialFeedbackButton
-        userEmail="user@example.com"
+        meta={{ user_email: "user@example.com" }}
         apiBasePath="/api/v1/feedback"
       />
     </>
@@ -62,16 +62,25 @@ If you prefer a centered dialog form instead of a right-side drawer:
 
 ```tsx
 <MaterialFeedbackButton
-  userEmail="user@example.com"
+  meta={{ user_email: "user@example.com" }}
   apiBasePath="/api/v1/feedback"
   formAsDialog={true}  // Shows form as centered dialog
 />
 ```
 
-#### With Authentication
+#### With Custom Metadata
+Pass any custom data you want to include with feedback submissions:
+
 ```tsx
 <MaterialFeedbackButton
-  userEmail={session?.user?.email}
+  meta={{
+    user_email: session?.user?.email,
+    user_id: session?.user?.id,
+    visitor_id: analytics.visitorId,
+    company_id: user?.companyId,
+    subscription_tier: "pro",
+    custom_field: "any value"
+  }}
   apiBasePath="/api/v1/feedback"
   additionalHeaders={{
     "Authorization": `Bearer ${token}`,
@@ -83,18 +92,20 @@ If you prefer a centered dialog form instead of a right-side drawer:
 #### Conditional Display
 ```tsx
 <MaterialFeedbackButton
-  userEmail={user?.email}
+  meta={{ user_email: user?.email }}
   apiBasePath="/api/v1/feedback"
-  hideIfNoEmail={true}  // Only show if user is logged in
+  hideIfNoMeta={true}  // Only show if meta is provided
 />
 ```
 
 #### With App ID Tracking
+The `appId` prop is automatically merged into the meta object:
+
 ```tsx
 <MaterialFeedbackButton
-  userEmail="user@example.com"
+  meta={{ user_email: "user@example.com", visitor_id: "xyz789" }}
   apiBasePath="/api/v1/feedback"
-  appId="my-app-production"  // Track which app sent feedback
+  appId="my-app-production"  // Automatically added to meta as app_id
 />
 ```
 
@@ -112,7 +123,11 @@ export default async function RootLayout({ children }) {
       <body>
         {children}
         <MaterialFeedbackButton
-          userEmail={session?.user?.email}
+          meta={{
+            user_email: session?.user?.email,
+            user_id: session?.user?.id,
+            user_name: session?.user?.name
+          }}
           apiBasePath="/api/v1/feedback"
           formAsDialog={true}
         />
@@ -259,15 +274,15 @@ A floating feedback button that opens a fullscreen dialog for creating feedback.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `userEmail` | `string \| null` | `null` | User's email address |
+| `meta` | `Record<string, any> \| null` | `null` | Custom metadata object to include with feedback (e.g., user info, analytics IDs, etc.) |
 | `apiBasePath` | `string` | `"/api/feedback"` | API endpoint for feedback submission |
 | `additionalHeaders` | `Record<string, string>` | `{}` | Additional headers for API requests |
-| `hideIfNoEmail` | `boolean` | `false` | Hide button if no email provided |
-| `appId` | `string` | `undefined` | Application identifier for tracking |
+| `hideIfNoMeta` | `boolean` | `false` | Hide button if no meta provided |
+| `appId` | `string` | `undefined` | Application identifier - automatically merged into meta as `app_id` |
 | `formAsDialog` | `boolean` | `false` | Show form as centered dialog instead of drawer (desktop only) |
 | `placement` | `'bottom-right' \| 'bottom-left' \| 'bottom-center' \| 'top-right' \| 'top-left' \| 'top-center' \| 'right-middle' \| 'left-middle' \| 'parent'` | `'bottom-right'` | Button position on screen. Side positions are rotated vertically. Use 'parent' for inline positioning |
 | `color` | `'error' \| 'primary' \| 'secondary' \| 'success' \| 'info' \| 'warning'` | `'error'` | Button color theme (red, blue, purple, green, light blue, orange) |
-| `locale` | `'en' \| 'el'` | `'en'` | Language locale for UI text. Supports English ('en') and Greek ('el') |
+| `locale` | `string` | `'en'` | Language locale for UI text. Supports 'en' (English) and 'el' (Greek). Falls back to 'en' for invalid values |
 
 #### Submission Data Schema
 
@@ -275,7 +290,6 @@ When a user submits feedback, the component sends a POST request to your API end
 
 ```typescript
 {
-  user_email: string | null;           // User's email address
   feedbackType: "bug" | "feature" | "other";  // Type of feedback (camelCase for compatibility)
   description: string;                 // User's feedback description
   image: string;                       // Base64 encoded screenshot image (data:image/png;base64,...)
@@ -290,13 +304,13 @@ When a user submits feedback, the component sends a POST request to your API end
   } | null;
   current_url: string;                 // URL where feedback was submitted
   material_ui_screensize: "mobile" | "tablet" | "desktop";  // Device type
+  meta: Record<string, any>;           // Custom metadata (includes app_id if provided)
 }
 ```
 
 **Example Submission:**
 ```json
 {
-  "user_email": "user@example.com",
   "feedbackType": "bug",
   "description": "The submit button is not working on the checkout page",
   "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...",
@@ -312,7 +326,13 @@ When a user submits feedback, the component sends a POST request to your API end
     "height": 1080
   },
   "current_url": "https://example.com/checkout",
-  "material_ui_screensize": "desktop"
+  "material_ui_screensize": "desktop",
+  "meta": {
+    "user_email": "user@example.com",
+    "user_id": "123",
+    "visitor_id": "abc-def-ghi",
+    "app_id": "my-app-production"
+  }
 }
 ```
 

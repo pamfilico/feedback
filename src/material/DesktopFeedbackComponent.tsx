@@ -24,7 +24,7 @@ const CanvasDraw = dynamic(() => import("react-canvas-draw"), {
 export interface DesktopFeedbackComponentProps {
   open: boolean;
   onClose: () => void;
-  userEmail?: string | null;
+  meta?: Record<string, any> | null;
   apiBasePath?: string;
   additionalHeaders?: Record<string, string>;
   appId?: string;
@@ -36,7 +36,7 @@ export interface DesktopFeedbackComponentProps {
 export function DesktopFeedbackComponent({
   open,
   onClose,
-  userEmail = null,
+  meta = null,
   apiBasePath = "/api/feedback",
   additionalHeaders = {},
   appId,
@@ -110,15 +110,20 @@ export function DesktopFeedbackComponent({
           drawings = parsedDrawings;
         }
 
+        // Merge meta with appId if appId is provided
+        const combinedMeta = {
+          ...(meta || {}),
+          ...(appId ? { app_id: appId } : {}),
+        };
+
         const payload = {
           feedbackType: values.feedbackType,
           description: values.description,
           image,
           current_url: currentUrl,
           drawings,
-          user_email: userEmail,
           material_ui_screensize: screenSize,
-          app_id: appId,
+          meta: combinedMeta,
         };
 
         const response = await fetch(apiBasePath, {

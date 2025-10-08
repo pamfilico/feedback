@@ -13,9 +13,9 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    userEmail: {
-      control: 'text',
-      description: 'User email for feedback submission',
+    meta: {
+      control: 'object',
+      description: 'Custom metadata object for feedback submission (e.g., user_email, visitor_id, company_id)',
     },
     apiBasePath: {
       control: 'text',
@@ -25,13 +25,13 @@ const meta = {
       control: 'object',
       description: 'Additional headers for API requests',
     },
-    hideIfNoEmail: {
+    hideIfNoMeta: {
       control: 'boolean',
-      description: 'Hide button if no user email provided',
+      description: 'Hide button if no metadata provided',
     },
     appId: {
       control: 'text',
-      description: 'Application ID for tracking',
+      description: 'Application ID (automatically merged into meta as app_id)',
     },
     formAsDialog: {
       control: 'boolean',
@@ -65,10 +65,13 @@ type Story = StoryObj<typeof meta>;
  */
 export const Default: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: {
+      user_email: 'user@example.com',
+      visitor_id: 'vis_12345',
+    },
     apiBasePath: '/api/v1/feedback',
     additionalHeaders: {},
-    hideIfNoEmail: false,
+    hideIfNoMeta: false,
     formAsDialog: false,
     placement: 'bottom-right',
   },
@@ -80,10 +83,13 @@ export const Default: Story = {
  */
 export const FormAsDialog: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: {
+      user_email: 'user@example.com',
+      visitor_id: 'vis_12345',
+    },
     apiBasePath: '/api/v1/feedback',
     additionalHeaders: {},
-    hideIfNoEmail: false,
+    hideIfNoMeta: false,
     formAsDialog: true,
     placement: 'bottom-right',
   },
@@ -94,7 +100,7 @@ export const FormAsDialog: Story = {
  */
 export const BottomLeft: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'bottom-left',
   },
@@ -105,7 +111,7 @@ export const BottomLeft: Story = {
  */
 export const BottomCenter: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'bottom-center',
   },
@@ -116,7 +122,7 @@ export const BottomCenter: Story = {
  */
 export const TopRight: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'top-right',
   },
@@ -127,7 +133,7 @@ export const TopRight: Story = {
  */
 export const TopLeft: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'top-left',
   },
@@ -138,7 +144,7 @@ export const TopLeft: Story = {
  */
 export const TopCenter: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'top-center',
   },
@@ -149,7 +155,7 @@ export const TopCenter: Story = {
  */
 export const RightMiddle: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'right-middle',
   },
@@ -160,7 +166,7 @@ export const RightMiddle: Story = {
  */
 export const LeftMiddle: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'left-middle',
   },
@@ -172,7 +178,7 @@ export const LeftMiddle: Story = {
  */
 export const ParentPositioning: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'parent',
   },
@@ -192,7 +198,7 @@ export const ParentPositioning: Story = {
  */
 export const MobileViewport: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'bottom-right',
   },
@@ -209,7 +215,7 @@ export const MobileViewport: Story = {
  */
 export const EnglishLocale: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'bottom-right',
     locale: 'en',
@@ -222,7 +228,7 @@ export const EnglishLocale: Story = {
  */
 export const GreekLocale: Story = {
   args: {
-    userEmail: 'user@example.com',
+    meta: { user_email: 'user@example.com' },
     apiBasePath: '/api/v1/feedback',
     placement: 'bottom-right',
     locale: 'el',
