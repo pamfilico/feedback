@@ -3,9 +3,11 @@ import React, { useRef, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import { Button, TextField, MenuItem, FormControl, InputLabel, Select, Box, Typography, Chip } from "@mui/material";
+import { Button, TextField, MenuItem, FormControl, InputLabel, Select, Box, Typography, Chip, Fab } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SaveIcon from "@mui/icons-material/Save";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import ComputerIcon from "@mui/icons-material/Computer";
 import TabletIcon from "@mui/icons-material/Tablet";
@@ -47,7 +49,9 @@ export function MobileFeedbackComponent({
 }: MobileFeedbackComponentProps) {
   const [image, setImage] = useState<string>("");
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const canvasRef = useRef<any>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const handleUploadImage = useCallback((file: File) => {
     const reader = new FileReader();
@@ -77,6 +81,7 @@ export function MobileFeedbackComponent({
   }, []);
 
   const handleCloseInternal = useCallback(() => {
+    setDrawerOpen(false);
     onClose();
   }, [onClose]);
 
@@ -125,6 +130,7 @@ export function MobileFeedbackComponent({
         toast.success("Feedback submitted successfully!");
         formik.resetForm();
         setImage("");
+        setDrawerOpen(false);
         handleCloseInternal();
       } catch (error) {
         console.error("Error submitting feedback:", error);
@@ -171,6 +177,7 @@ export function MobileFeedbackComponent({
     } else {
       formik.resetForm();
       setImage("");
+      setDrawerOpen(false);
     }
   }, [open]);
 
@@ -188,6 +195,7 @@ export function MobileFeedbackComponent({
 
   return (
     <Dialog
+      ref={dialogRef}
       open={open}
       onClose={handleCloseInternal}
       fullScreen
@@ -213,12 +221,33 @@ export function MobileFeedbackComponent({
         >
           <ArrowBackIcon />
         </IconButton>
-        <Chip
-          icon={getScreenIcon()}
-          label={screenSize.toUpperCase()}
-          color={getScreenColor() as any}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Chip
+            icon={getScreenIcon()}
+            label={screenSize.toUpperCase()}
+            color={getScreenColor() as any}
+            size="small"
+          />
+          <Typography variant="caption" color="text.secondary" sx={{ fontStyle: "italic" }}>
+            💡 Draw on screenshot
+          </Typography>
+        </Box>
+        <Fab
+          color="primary"
+          aria-label="save feedback"
+          onClick={() => setDrawerOpen(true)}
           size="small"
-        />
+          sx={{
+            animation: "wiggle 2s ease-in-out infinite",
+            "@keyframes wiggle": {
+              "0%, 100%": { transform: "rotate(0deg)" },
+              "25%": { transform: "rotate(-5deg)" },
+              "75%": { transform: "rotate(5deg)" }
+            }
+          }}
+        >
+          <SaveIcon />
+        </Fab>
       </Box>
 
       <DialogContent sx={{
@@ -227,13 +256,13 @@ export function MobileFeedbackComponent({
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        position: 'relative',
       }}>
-        {/* Screenshot area - takes 40% of screen */}
+        {/* Screenshot area with canvas */}
         <Box sx={{
           position: "relative",
           bgcolor: "#f5f5f5",
-          height: '40vh',
-          flexShrink: 0,
+          flex: 1,
           overflow: 'hidden',
         }}>
           {image ? (
@@ -320,100 +349,131 @@ export function MobileFeedbackComponent({
           )}
         </Box>
 
-        {/* Drawing controls */}
-        <Box sx={{
-          p: 1,
-          display: 'flex',
-          gap: 1,
-          borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-          flexShrink: 0,
-        }}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={clearDrawing}
-            size="small"
-            sx={{ flex: 1, minWidth: 0 }}
-          >
-            Reset
-          </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={undoLastDrawing}
-            size="small"
-            sx={{ flex: 1, minWidth: 0 }}
-          >
-            Undo
-          </Button>
-        </Box>
-
-        {/* Form area - scrollable */}
-        <Box sx={{
-          flex: 1,
-          overflowY: "auto",
-          p: 2,
-        }}>
-          <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
-            💡 Draw on the screenshot above
-          </Typography>
-
-          <form onSubmit={formik.handleSubmit}>
-            <FormControl fullWidth margin="normal" size="small">
-              <InputLabel id="mobile-feedbackType-label">Feedback Type</InputLabel>
-              <Select
-                labelId="mobile-feedbackType-label"
-                id="mobile-feedbackType"
-                name="feedbackType"
-                value={formik.values.feedbackType}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.feedbackType &&
-                  Boolean(formik.errors.feedbackType)
-                }
-                label="Feedback Type"
+        {/* Drawer for form */}
+        <Drawer
+          anchor="bottom"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          variant="temporary"
+          ModalProps={{
+            keepMounted: true,
+            container: dialogRef.current,
+            disablePortal: false,
+          }}
+          slotProps={{
+            backdrop: {
+              sx: {
+                position: 'absolute',
+                zIndex: 1300,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              }
+            }
+          }}
+          sx={{
+            position: 'absolute',
+            zIndex: 1400,
+            '& .MuiDrawer-paper': {
+              position: "absolute",
+              height: "90vh",
+              boxSizing: 'border-box',
+              zIndex: 1400,
+            },
+          }}
+        >
+          <Box sx={{ height: "100%", bgcolor: "background.paper", overflowY: "auto", p: 2 }}>
+            <Box sx={{
+              display: 'flex',
+              gap: 1,
+              mb: 2,
+            }}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={clearDrawing}
+                size="small"
+                sx={{ flex: 1 }}
               >
-                <MenuItem value="bug">Bug</MenuItem>
-                <MenuItem value="feature">Feature Request</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
-              </Select>
-              {formik.touched.feedbackType && formik.errors.feedbackType && (
-                <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 0.5 }}>
-                  {formik.errors.feedbackType}
-                </Box>
-              )}
-            </FormControl>
-
-            <TextField
-              fullWidth
-              margin="normal"
-              id="mobile-description"
-              name="description"
-              label="Description"
-              multiline
-              rows={4}
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.description && Boolean(formik.errors.description)
-              }
-              helperText={
-                formik.touched.description && formik.errors.description
-              }
-              size="small"
-            />
+                Reset Drawing
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={undoLastDrawing}
+                size="small"
+                sx={{ flex: 1 }}
+              >
+                Undo
+              </Button>
+            </Box>
 
             <Button
+              variant="outlined"
               color="primary"
-              variant="contained"
+              onClick={() => setDrawerOpen(false)}
               fullWidth
-              type="submit"
-              sx={{ mt: 2 }}
+              size="small"
+              sx={{ mb: 2 }}
             >
-              Submit Feedback
+              Close Form
             </Button>
-          </form>
-        </Box>
+
+            <form onSubmit={formik.handleSubmit}>
+              <FormControl fullWidth margin="normal" size="small">
+                <InputLabel id="mobile-feedbackType-label">Feedback Type</InputLabel>
+                <Select
+                  labelId="mobile-feedbackType-label"
+                  id="mobile-feedbackType"
+                  name="feedbackType"
+                  value={formik.values.feedbackType}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.feedbackType &&
+                    Boolean(formik.errors.feedbackType)
+                  }
+                  label="Feedback Type"
+                >
+                  <MenuItem value="bug">Bug</MenuItem>
+                  <MenuItem value="feature">Feature Request</MenuItem>
+                  <MenuItem value="other">Other</MenuItem>
+                </Select>
+                {formik.touched.feedbackType && formik.errors.feedbackType && (
+                  <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 0.5 }}>
+                    {formik.errors.feedbackType}
+                  </Box>
+                )}
+              </FormControl>
+
+              <TextField
+                fullWidth
+                margin="normal"
+                id="mobile-description"
+                name="description"
+                label="Description"
+                multiline
+                rows={8}
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.description && Boolean(formik.errors.description)
+                }
+                helperText={
+                  formik.touched.description && formik.errors.description
+                }
+                size="small"
+              />
+
+              <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                type="submit"
+                sx={{ mt: 2 }}
+              >
+                Submit Feedback
+              </Button>
+            </form>
+          </Box>
+        </Drawer>
       </DialogContent>
     </Dialog>
   );

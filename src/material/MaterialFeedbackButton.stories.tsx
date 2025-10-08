@@ -175,3 +175,20 @@ export const ParentPositioning: Story = {
     ),
   ],
 };
+
+/**
+ * Mobile viewport simulation to test the mobile-optimized component.
+ * Uses a small viewport to trigger mobile breakpoint and show the MobileFeedbackComponent.
+ */
+export const MobileViewport: Story = {
+  args: {
+    userEmail: 'user@example.com',
+    apiBasePath: '/api/v1/feedback',
+    placement: 'bottom-right',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+};
