@@ -24,6 +24,7 @@ export interface MaterialFeedbackButtonProps {
   appId?: string;
   formAsDialog?: boolean;
   placement?: PlacementType;
+  color?: 'error' | 'primary' | 'secondary' | 'success' | 'info' | 'warning';
 }
 
 export function MaterialFeedbackButton({
@@ -34,6 +35,7 @@ export function MaterialFeedbackButton({
   appId,
   formAsDialog = false,
   placement = 'bottom-right',
+  color = 'error',
 }: MaterialFeedbackButtonProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -105,7 +107,7 @@ export function MaterialFeedbackButton({
           padding: "10px 20px",
           minWidth: { xs: 'auto', sm: 'auto' },
         }}
-        color="error"
+        color={color}
         onClick={() => setDialogOpen(true)}
       >
         <Box

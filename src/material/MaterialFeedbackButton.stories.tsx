@@ -42,6 +42,11 @@ const meta = {
       options: ['bottom-right', 'bottom-left', 'bottom-center', 'top-right', 'top-left', 'top-center', 'right-middle', 'left-middle', 'parent'],
       description: 'Button placement on screen',
     },
+    color: {
+      control: 'select',
+      options: ['error', 'primary', 'secondary', 'success', 'info', 'warning'],
+      description: 'Button color theme (defaults to error/red)',
+    },
   },
 } satisfies Meta<typeof MaterialFeedbackButton>;
 
