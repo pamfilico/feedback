@@ -26,7 +26,7 @@ export interface MaterialFeedbackButtonProps {
   formAsDialog?: boolean;
   placement?: PlacementType;
   color?: 'error' | 'primary' | 'secondary' | 'success' | 'info' | 'warning';
-  locale?: Locale;
+  locale?: string;
 }
 
 export function MaterialFeedbackButton({
@@ -48,7 +48,9 @@ export function MaterialFeedbackButton({
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
-  const t = useMemo(() => getTranslations(locale), [locale]);
+  // Validate and cast locale to Locale type, fallback to 'en' if invalid
+  const validLocale: Locale = (locale === 'en' || locale === 'el') ? locale : 'en';
+  const t = useMemo(() => getTranslations(validLocale), [validLocale]);
 
   const getScreenSize = (): "mobile" | "tablet" | "desktop" => {
     if (isMobile) return "mobile";
@@ -138,7 +140,7 @@ export function MaterialFeedbackButton({
           additionalHeaders={additionalHeaders}
           appId={appId}
           screenSize={getScreenSize()}
-          locale={locale}
+          locale={validLocale}
         />
       ) : (
         <DesktopFeedbackComponent
@@ -150,7 +152,7 @@ export function MaterialFeedbackButton({
           appId={appId}
           formAsDialog={formAsDialog}
           screenSize={getScreenSize()}
-          locale={locale}
+          locale={validLocale}
         />
       )}
     </>
