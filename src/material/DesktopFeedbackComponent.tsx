@@ -45,6 +45,7 @@ export function DesktopFeedbackComponent({
   locale = 'en',
 }: DesktopFeedbackComponentProps) {
   const [image, setImage] = useState<string>("");
+  const [loadingScreenshot, setLoadingScreenshot] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const canvasRef = useRef<any>(null);
@@ -154,6 +155,7 @@ export function DesktopFeedbackComponent({
   const captureScreenshot = useCallback(async () => {
     if (typeof window === "undefined") return;
 
+    setLoadingScreenshot(true);
     try {
       const { toPng } = await import("html-to-image");
 
@@ -175,6 +177,8 @@ export function DesktopFeedbackComponent({
       setImage("");
       setDrawerOpen(true);
       toast.error(t.feedback.notifications.screenshotCaptureFailed);
+    } finally {
+      setLoadingScreenshot(false);
     }
   }, [t]);
 
@@ -492,8 +496,14 @@ export function DesktopFeedbackComponent({
           </Box>
         </Dialog>
 
-        <Box sx={{ width: "100%", height: "100%", position: "relative", bgcolor: "#f5f5f5", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          {image ? (
+        <Box sx={{ width: "100%", height: "100%", position: "relative", bgcolor: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {loadingScreenshot ? (
+            <Box sx={{ textAlign: "center", px: 4 }}>
+              <Typography variant="h6" color="text.secondary">
+                {t.feedback.screenshot.capturing}
+              </Typography>
+            </Box>
+          ) : image ? (
             <>
               <img
                 src={image}
@@ -505,6 +515,7 @@ export function DesktopFeedbackComponent({
                   display: "block",
                   position: "relative",
                   zIndex: 1,
+                  backgroundColor: "#ffffff",
                 }}
               />
               <Box

@@ -8,6 +8,7 @@
       "drawHintMobile": "💡 Draw on screenshot"
     },
     "screenshot": {
+      "capturing": "Capturing screenshot...",
       "failed": "Failed to capture screenshot",
       "uploadManual": "Please try exiting this dialog and re-entering. If that doesn't work, take a manual screenshot and upload it using the button below. Sorry for the inconvenience.",
       "uploadManualMobile": "Try exiting and re-entering. If that doesn't work, upload a screenshot manually. Sorry for the inconvenience.",

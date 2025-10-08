@@ -43,6 +43,7 @@ export function MobileFeedbackComponent({
   locale = 'en',
 }: MobileFeedbackComponentProps) {
   const [image, setImage] = useState<string>("");
+  const [loadingScreenshot, setLoadingScreenshot] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const canvasRef = useRef<any>(null);
@@ -152,6 +153,7 @@ export function MobileFeedbackComponent({
   const captureScreenshot = useCallback(async () => {
     if (typeof window === "undefined") return;
 
+    setLoadingScreenshot(true);
     try {
       const { toPng } = await import("html-to-image");
 
@@ -172,6 +174,8 @@ export function MobileFeedbackComponent({
       console.error("Failed to take screenshot:", error);
       setImage("");
       toast.error(t.feedback.notifications.screenshotCaptureFailed);
+    } finally {
+      setLoadingScreenshot(false);
     }
   }, [t]);
 
@@ -271,11 +275,26 @@ export function MobileFeedbackComponent({
         {/* Screenshot area with canvas */}
         <Box sx={{
           position: "relative",
-          bgcolor: "#f5f5f5",
+          bgcolor: "#ffffff",
           flex: 1,
           overflow: 'hidden',
         }}>
-          {image ? (
+          {loadingScreenshot ? (
+            <Box sx={{
+              textAlign: "center",
+              px: 2,
+              py: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+            }}>
+              <Typography variant="body2" color="text.secondary">
+                {t.feedback.screenshot.capturing}
+              </Typography>
+            </Box>
+          ) : image ? (
             <>
               <img
                 src={image}
@@ -285,6 +304,7 @@ export function MobileFeedbackComponent({
                   height: "100%",
                   objectFit: "contain",
                   display: "block",
+                  backgroundColor: "#ffffff",
                 }}
               />
               <Box
