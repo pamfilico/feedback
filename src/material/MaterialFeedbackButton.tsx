@@ -42,6 +42,7 @@ export function MaterialFeedbackButton({
 }: MaterialFeedbackButtonProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -61,6 +62,23 @@ export function MaterialFeedbackButton({
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const handleRetryScreenshot = async () => {
+    // Close dialog
+    setDialogOpen(false);
+
+    // Wait for dialog to close
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    // Force re-mount by incrementing key
+    setRetryKey(prev => prev + 1);
+
+    // Wait a bit more for cleanup
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Reopen dialog (this will trigger screenshot capture)
+    setDialogOpen(true);
+  };
 
   if (hideIfNoMeta && !meta) {
     return null;
@@ -133,6 +151,7 @@ export function MaterialFeedbackButton({
 
       {isMobile ? (
         <MobileFeedbackComponent
+          key={retryKey}
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
           meta={meta}
@@ -141,9 +160,11 @@ export function MaterialFeedbackButton({
           appId={appId}
           screenSize={getScreenSize()}
           locale={validLocale}
+          onRetryScreenshot={handleRetryScreenshot}
         />
       ) : (
         <DesktopFeedbackComponent
+          key={retryKey}
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
           meta={meta}
@@ -153,6 +174,7 @@ export function MaterialFeedbackButton({
           formAsDialog={formAsDialog}
           screenSize={getScreenSize()}
           locale={validLocale}
+          onRetryScreenshot={handleRetryScreenshot}
         />
       )}
     </>

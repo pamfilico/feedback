@@ -31,6 +31,7 @@ export interface DesktopFeedbackComponentProps {
   formAsDialog?: boolean;
   screenSize: "mobile" | "tablet" | "desktop";
   locale?: Locale;
+  onRetryScreenshot?: () => void;
 }
 
 export function DesktopFeedbackComponent({
@@ -43,6 +44,7 @@ export function DesktopFeedbackComponent({
   formAsDialog = false,
   screenSize,
   locale = 'en',
+  onRetryScreenshot,
 }: DesktopFeedbackComponentProps) {
   const [image, setImage] = useState<string>("");
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -552,7 +554,11 @@ export function DesktopFeedbackComponent({
                 <Button
                   variant="outlined"
                   color="primary"
-                  onClick={captureScreenshot}
+                  onClick={() => {
+                    if (onRetryScreenshot) {
+                      onRetryScreenshot();
+                    }
+                  }}
                 >
                   {t.feedback.screenshot.tryAgainButton}
                 </Button>

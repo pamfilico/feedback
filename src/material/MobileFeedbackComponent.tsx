@@ -30,6 +30,7 @@ export interface MobileFeedbackComponentProps {
   appId?: string;
   screenSize: "mobile" | "tablet" | "desktop";
   locale?: Locale;
+  onRetryScreenshot?: () => void;
 }
 
 export function MobileFeedbackComponent({
@@ -41,6 +42,7 @@ export function MobileFeedbackComponent({
   appId,
   screenSize,
   locale = 'en',
+  onRetryScreenshot,
 }: MobileFeedbackComponentProps) {
   const [image, setImage] = useState<string>("");
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -342,7 +344,11 @@ export function MobileFeedbackComponent({
                   variant="outlined"
                   color="primary"
                   size="small"
-                  onClick={captureScreenshot}
+                  onClick={() => {
+                    if (onRetryScreenshot) {
+                      onRetryScreenshot();
+                    }
+                  }}
                 >
                   {t.feedback.screenshot.tryAgainButtonShort}
                 </Button>
