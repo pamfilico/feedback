@@ -26,11 +26,11 @@ interface MobileEditFeedbackComponentProps {
   feedback: any;
   onUpdate?: (feedbackId: string) => void;
   onCancel?: () => void;
-  apiBaseUrl: string;
+  editingUrl: string; // Base URL for edit operations. feedbackId will be appended automatically
   additionalHeaders?: Record<string, string>;
 }
 
-export default function MobileEditFeedbackComponent({ feedback, onUpdate, onCancel, apiBaseUrl, additionalHeaders = {} }: MobileEditFeedbackComponentProps) {
+export default function MobileEditFeedbackComponent({ feedback, onUpdate, onCancel, editingUrl, additionalHeaders = {} }: MobileEditFeedbackComponentProps) {
 
   const [image, setImage] = useState<string>("");
   const canvasRef = useRef<any>(null);
@@ -137,7 +137,7 @@ export default function MobileEditFeedbackComponent({ feedback, onUpdate, onCanc
         };
 
         await axios.put(
-          `${apiBaseUrl}/api/v1/feedback/${feedback.id}`,
+          `${editingUrl}/${feedback.id}`,
           payload,
           {
             headers: additionalHeaders,

@@ -58,13 +58,15 @@ interface FeedbackResponse {
 }
 
 interface FeedbackPageComponentProps {
-  apiBaseUrl: string;
+  fetchFeedbacksUrl: string;
+  editingUrl?: string; // Optional: Base URL for edit operations (GET/PUT). feedbackId will be appended automatically
   onClickEditButtonFeedbackItem?: (feedbackId: string) => void;
   additionalHeaders?: Record<string, string>;
 }
 
 export default function FeedbackPageComponent({
-  apiBaseUrl,
+  fetchFeedbacksUrl,
+  editingUrl,
   onClickEditButtonFeedbackItem,
   additionalHeaders = {},
 }: FeedbackPageComponentProps) {
@@ -84,7 +86,7 @@ export default function FeedbackPageComponent({
       });
 
       const response = await axios.get(
-        `${apiBaseUrl}/api/v1/feedback?${params.toString()}`,
+        `${fetchFeedbacksUrl}?${params.toString()}`,
         {
           headers: additionalHeaders,
         }
@@ -324,9 +326,9 @@ export default function FeedbackPageComponent({
             </MuiIconButton>
           </Toolbar>
         </AppBar>
-        {selectedFeedbackId && (
+        {selectedFeedbackId && editingUrl && (
           <FeedbackEditPageComponent
-            apiBaseUrl={apiBaseUrl}
+            editingUrl={editingUrl}
             feedbackId={selectedFeedbackId}
             additionalHeaders={additionalHeaders}
             onUpdate={handleUpdateFeedback}

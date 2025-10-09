@@ -6,7 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 interface FeedbackEditPageComponentProps {
-  apiBaseUrl: string;
+  editingUrl: string; // Base URL for edit operations. feedbackId will be appended automatically
   feedbackId: string;
   additionalHeaders?: Record<string, string>;
   onUpdate?: (feedbackId: string) => void;
@@ -16,7 +16,7 @@ interface FeedbackEditPageComponentProps {
 }
 
 export default function FeedbackEditPageComponent({
-  apiBaseUrl,
+  editingUrl,
   feedbackId,
   additionalHeaders = {},
   onUpdate,
@@ -32,7 +32,7 @@ export default function FeedbackEditPageComponent({
     const fetchFeedback = async () => {
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/api/v1/feedback/${feedbackId}`,
+          `${editingUrl}/${feedbackId}`,
           {
             headers: additionalHeaders,
           }
@@ -56,7 +56,7 @@ export default function FeedbackEditPageComponent({
     if (feedbackId) {
       fetchFeedback();
     }
-  }, [feedbackId, apiBaseUrl, additionalHeaders]);
+  }, [feedbackId, editingUrl, additionalHeaders]);
 
   if (loading) {
     return (
@@ -81,7 +81,7 @@ export default function FeedbackEditPageComponent({
           feedback={feedback}
           onUpdate={onUpdate}
           onCancel={onCancel}
-          apiBaseUrl={apiBaseUrl}
+          editingUrl={editingUrl}
           additionalHeaders={additionalHeaders}
         />
       ) : (
@@ -89,7 +89,7 @@ export default function FeedbackEditPageComponent({
           feedback={feedback}
           onUpdate={onUpdate}
           onCancel={onCancel}
-          apiBaseUrl={apiBaseUrl}
+          editingUrl={editingUrl}
           additionalHeaders={additionalHeaders}
         />
       )}

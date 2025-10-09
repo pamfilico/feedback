@@ -20,10 +20,12 @@ npm run storybook              # Run Storybook dev server on port 6006
 npm run build-storybook        # Build static Storybook (includes GitHub Pages fix)
 npm run deploy-storybook       # Deploy to GitHub Pages (gh-pages branch)
 
-# Release new versions (automatically builds and publishes)
-npm run release:patch  # 1.0.x -> 1.0.(x+1)
-npm run release:minor  # 1.0.x -> 1.(x+1).0
-npm run release:major  # 1.x.x -> (x+1).0.0
+# Release workflow (IMPORTANT: use npm-publisher agent)
+# When ready to publish, request the npm-publisher agent to handle versioning and publishing
+# The agent will guide you through: version bumping, building, publishing to npm, and deploying Storybook
+npm run release:patch  # Manual: 1.0.x -> 1.0.(x+1) - for bug fixes
+npm run release:minor  # Manual: 1.0.x -> 1.(x+1).0 - for new features
+npm run release:major  # Manual: 1.x.x -> (x+1).0.0 - for breaking changes
 ```
 
 ## Architecture
@@ -50,7 +52,9 @@ npm run release:major  # 1.x.x -> (x+1).0.0
    - Supports manual screenshot upload if auto-capture fails
 
 2. **FeedbackPageComponent** (`src/material/FeedbackPageComponent.tsx`)
-   - Paginated feedback list viewer
+   - Paginated feedback list viewer with customizable fetch URL
+   - Uses `fetchFeedbacksUrl` prop for fetching paginated feedback (pagination params automatically appended)
+   - Optional `editingUrl` prop for edit operations (GET/PUT single feedback, feedbackId auto-appended)
    - Opens fullscreen dialog for inline editing
    - Shows device type indicators and type-based color coding
 
@@ -72,6 +76,7 @@ npm run release:major  # 1.x.x -> (x+1).0.0
 - **Screenshot**: html-to-image (dynamically imported)
 - **HTTP**: axios (peer dependency)
 - **Notifications**: react-hot-toast
+- **Internationalization**: Built-in i18n system with JSON locale files (supports English, Greek)
 
 ### Important Patterns
 
@@ -80,15 +85,19 @@ npm run release:major  # 1.x.x -> (x+1).0.0
 - **Device detection**: Uses MUI's `useMediaQuery` with theme breakpoints (not navigator.userAgent)
 - **Screenshot filtering**: Filters out ProseMirror separators and data URI images to avoid CORS issues
 - **Canvas overlay**: Transparent canvas positioned absolutely over screenshot for annotations
+- **i18n implementation**: Translations stored in `src/locales/[locale].json`, loaded via `src/locales/index.ts`. To add a language, create JSON file and update the `Locale` type and `translations` object
 
 ### API Contract
 
-Components expect backend endpoints at `apiBasePath` (default: `/api/v1/feedback`):
-
+**MaterialFeedbackButton** uses `apiBasePath` prop (default: `/api/v1/feedback`):
 - **POST /** - Submit new feedback (includes base64 image, drawings JSON, device type, URL)
-- **GET /?page=1&limit=20** - Paginated feedback list
-- **GET /{feedbackId}** - Single feedback item
-- **PUT /{feedbackId}** - Update feedback
+
+**FeedbackPageComponent** uses `fetchFeedbacksUrl` prop:
+- **GET {fetchFeedbacksUrl}?page=1&limit=20** - Paginated feedback list (pagination params auto-appended)
+
+**FeedbackPageComponent/FeedbackEditPageComponent** use optional `editingUrl` prop for editing:
+- **GET {editingUrl}/{feedbackId}** - Single feedback item (feedbackId auto-appended)
+- **PUT {editingUrl}/{feedbackId}** - Update feedback (feedbackId auto-appended)
 
 **Key submission fields**:
 - `user_email` (snake_case)
@@ -130,8 +139,10 @@ When working with mock data in `src/mocks/handlers.ts`:
 
 - Maintain "use client" directive in client-side components
 - Keep dynamic imports for SSR-incompatible libraries
-- Preserve snake_case/camelCase field naming conventions for API compatibility
+- Preserve snake_case/camelCase field naming conventions for API compatibility (submission uses `feedbackType`, API returns `type_of`)
 - Use MUI breakpoints for responsive behavior, not CSS media queries
 - Always include device type detection in new feedback-related components
 - When updating mock data, ensure `mockFeedbackItems` remains a flat array structure
 - Test Storybook locally before deploying to ensure MSW mocks work correctly
+- When adding i18n translations, maintain consistent key structure across all locale files
+- For publishing new versions, use the npm-publisher agent which handles the complete workflow (versioning, building, npm publish, Storybook deployment)

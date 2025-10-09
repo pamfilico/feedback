@@ -348,7 +348,8 @@ import { FeedbackPageComponent } from "@pamfilico/feedback/material";
 function FeedbackPage() {
   return (
     <FeedbackPageComponent
-      apiBaseUrl="https://api.example.com"
+      fetchFeedbacksUrl="https://api.example.com/api/v1/feedback"
+      editingUrl="https://api.example.com/api/v1/feedback"  // Optional: for edit operations
       additionalHeaders={{ "EPICWORK-TOKEN": token }}
       onClickEditButtonFeedbackItem={(id) => console.log("Editing:", id)}
     />
@@ -356,11 +357,16 @@ function FeedbackPage() {
 }
 ```
 
+**Key Points:**
+- `fetchFeedbacksUrl`: Used for fetching the paginated list. Pagination params (`page`, `limit`) are automatically appended.
+- `editingUrl`: Used for GET/PUT operations on individual feedback items. The `feedbackId` is automatically appended (e.g., `${editingUrl}/${feedbackId}`).
+
 #### Props
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `apiBaseUrl` | `string` | Yes | Backend API base URL |
+| `fetchFeedbacksUrl` | `string` | Yes | Full URL for fetching paginated feedback list. Pagination params (page, limit) are automatically appended as query parameters |
+| `editingUrl` | `string` | No | Base URL for edit operations. feedbackId is automatically appended for GET/PUT requests (e.g., `${editingUrl}/${feedbackId}`). Optional if you don't need inline editing |
 | `additionalHeaders` | `Record<string, string>` | No | Authentication headers for API requests |
 | `onClickEditButtonFeedbackItem` | `(feedbackId: string) => void` | No | Optional callback when edit button is clicked |
 
@@ -388,7 +394,7 @@ import {
 function EditFeedback({ feedbackId }) {
   return (
     <FeedbackEditPageComponent
-      apiBaseUrl="https://api.example.com"
+      editingUrl="https://api.example.com/api/v1/feedback"
       feedbackId={feedbackId}
       additionalHeaders={{ "EPICWORK-TOKEN": token }}
       onUpdate={(id) => router.push("/feedback")}
@@ -400,11 +406,13 @@ function EditFeedback({ feedbackId }) {
 }
 ```
 
+**Note:** The `feedbackId` is automatically appended to `editingUrl` for GET/PUT requests.
+
 #### Props
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `apiBaseUrl` | `string` | Yes | Backend API base URL |
+| `editingUrl` | `string` | Yes | Base URL for edit operations. feedbackId is automatically appended (e.g., `${editingUrl}/${feedbackId}`) |
 | `feedbackId` | `string` | Yes | ID of feedback to edit |
 | `additionalHeaders` | `Record<string, string>` | No | Authentication headers |
 | `onUpdate` | `(feedbackId: string) => void` | No | Callback when feedback is updated |
@@ -423,7 +431,7 @@ Edit component optimized for desktop/tablet devices with side-by-side screenshot
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
 | `feedback` | `any` | Yes | Feedback object to edit |
-| `apiBaseUrl` | `string` | Yes | Backend API base URL |
+| `editingUrl` | `string` | Yes | Base URL for edit operations. feedbackId is automatically appended from feedback.id |
 | `additionalHeaders` | `Record<string, string>` | No | Authentication headers |
 | `onUpdate` | `(feedbackId: string) => void` | No | Callback after successful update |
 | `onCancel` | `() => void` | No | Callback when cancelled |
@@ -488,10 +496,10 @@ Creates a new feedback submission.
 
 ---
 
-### GET `/api/v1/feedback?page=1&limit=20&user_id={userId}`
+### GET `{fetchFeedbacksUrl}?page=1&limit=20`
 **Used by:** FeedbackPageComponent
 
-Returns paginated list of feedback items. The `user_id` parameter is optional and can be used to filter feedback by user.
+Returns paginated list of feedback items. The component automatically appends `page` and `limit` query parameters to the `fetchFeedbacksUrl` prop. Additional query parameters (like `user_id`) can be included directly in the `fetchFeedbacksUrl` string.
 
 **Response:**
 ```json
@@ -556,10 +564,12 @@ Returns paginated list of feedback items. The `user_id` parameter is optional an
 
 ---
 
-### GET `/api/v1/feedback/{feedbackId}`
+### GET `{editingUrl}/{feedbackId}`
 **Used by:** FeedbackEditPageComponent
 
-Returns a single feedback item for editing.
+Returns a single feedback item for editing. The component automatically constructs the URL by appending the feedbackId to the editingUrl prop.
+
+**Example Request:** `GET https://api.example.com/api/v1/feedback/uuid-1`
 
 **Response:**
 ```json
@@ -587,10 +597,12 @@ Returns a single feedback item for editing.
 
 ---
 
-### PUT `/api/v1/feedback/{feedbackId}`
+### PUT `{editingUrl}/{feedbackId}`
 **Used by:** DesktopEditFeedbackComponent, MobileEditFeedbackComponent
 
-Updates an existing feedback item.
+Updates an existing feedback item. The component automatically constructs the URL by appending feedback.id to the editingUrl prop.
+
+**Example Request:** `PUT https://api.example.com/api/v1/feedback/uuid-1`
 
 **Request Body:**
 ```json

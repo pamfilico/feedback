@@ -26,11 +26,11 @@ interface DesktopEditFeedbackComponentProps {
   feedback: any;
   onUpdate?: (feedbackId: string) => void;
   onCancel?: () => void;
-  apiBaseUrl: string;
+  editingUrl: string; // Base URL for edit operations. feedbackId will be appended automatically
   additionalHeaders?: Record<string, string>;
 }
 
-export default function DesktopEditFeedbackComponent({ feedback, onUpdate, onCancel, apiBaseUrl, additionalHeaders = {} }: DesktopEditFeedbackComponentProps) {
+export default function DesktopEditFeedbackComponent({ feedback, onUpdate, onCancel, editingUrl, additionalHeaders = {} }: DesktopEditFeedbackComponentProps) {
 
   const [image, setImage] = useState<string>("");
   const canvasRef = useRef<any>(null);
@@ -131,7 +131,7 @@ export default function DesktopEditFeedbackComponent({ feedback, onUpdate, onCan
         };
 
         await axios.put(
-          `${apiBaseUrl}/api/v1/feedback/${feedback.id}`,
+          `${editingUrl}/${feedback.id}`,
           payload,
           {
             headers: additionalHeaders,
