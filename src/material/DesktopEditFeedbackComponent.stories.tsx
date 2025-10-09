@@ -17,9 +17,9 @@ const meta = {
       control: 'object',
       description: 'Feedback object to edit',
     },
-    apiBaseUrl: {
+    editingUrl: {
       control: 'text',
-      description: 'Backend API base URL',
+      description: 'Base URL for edit operations. feedbackId will be appended automatically',
     },
     additionalHeaders: {
       control: 'object',
@@ -40,13 +40,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * Default desktop edit view with screenshot and drawings using mockFeedbackItems[0][0].
+ * Default desktop edit view with screenshot and drawings using mockFeedbackItems[0].
  * Side-by-side layout with screenshot annotation on the left and form on the right.
  */
 export const Default: Story = {
   args: {
     feedback: mockFeedbackItems[0],
-    apiBaseUrl: '',
+    editingUrl: '',
     additionalHeaders: {},
   },
 };
