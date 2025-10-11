@@ -22,7 +22,7 @@ const DEFAULT_BASE_URL = 'https://adminfast-prod-backend-ere5z.ondigitalocean.ap
 export interface MaterialFeedbackButtonProps {
   meta?: Record<string, any> | null;
   baseUrl?: string;
-  admin_panel_api_key?: string;
+  apiKey?: string;
   additionalHeaders?: Record<string, string>;
   hideIfNoMeta?: boolean;
   appId?: string;
@@ -35,7 +35,7 @@ export interface MaterialFeedbackButtonProps {
 export function MaterialFeedbackButton({
   meta = null,
   baseUrl = DEFAULT_BASE_URL,
-  admin_panel_api_key,
+  apiKey,
   additionalHeaders = {},
   hideIfNoMeta = false,
   appId,
@@ -44,12 +44,12 @@ export function MaterialFeedbackButton({
   color = 'error',
   locale = 'en',
 }: MaterialFeedbackButtonProps) {
-  // Construct the API endpoint from baseUrl
-  const apiBasePath = `${baseUrl}/api/v1/feedback`;
+  // Construct the API endpoint from baseUrl - path is built into the component
+  const apiBasePath = `${baseUrl}/api/v1/feedbacks`;
 
-  // Merge admin_panel_api_key into headers if provided
-  const mergedHeaders = admin_panel_api_key
-    ? { ...additionalHeaders, 'X-Admin-Panel-API-Key': admin_panel_api_key }
+  // Merge apiKey into headers if provided
+  const mergedHeaders = apiKey
+    ? { ...additionalHeaders, 'API-KEY': apiKey }
     : additionalHeaders;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
