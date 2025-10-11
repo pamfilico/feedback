@@ -17,9 +17,12 @@ export type PlacementType =
   | 'left-middle'
   | 'parent';
 
+const DEFAULT_BASE_URL = 'https://adminfast-prod-backend-ere5z.ondigitalocean.app';
+
 export interface MaterialFeedbackButtonProps {
   meta?: Record<string, any> | null;
-  apiBasePath?: string;
+  baseUrl?: string;
+  admin_panel_api_key?: string;
   additionalHeaders?: Record<string, string>;
   hideIfNoMeta?: boolean;
   appId?: string;
@@ -31,7 +34,8 @@ export interface MaterialFeedbackButtonProps {
 
 export function MaterialFeedbackButton({
   meta = null,
-  apiBasePath = "/api/feedback",
+  baseUrl = DEFAULT_BASE_URL,
+  admin_panel_api_key,
   additionalHeaders = {},
   hideIfNoMeta = false,
   appId,
@@ -40,6 +44,13 @@ export function MaterialFeedbackButton({
   color = 'error',
   locale = 'en',
 }: MaterialFeedbackButtonProps) {
+  // Construct the API endpoint from baseUrl
+  const apiBasePath = `${baseUrl}/api/v1/feedback`;
+
+  // Merge admin_panel_api_key into headers if provided
+  const mergedHeaders = admin_panel_api_key
+    ? { ...additionalHeaders, 'X-Admin-Panel-API-Key': admin_panel_api_key }
+    : additionalHeaders;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -137,7 +148,7 @@ export function MaterialFeedbackButton({
           onClose={() => setDialogOpen(false)}
           meta={meta}
           apiBasePath={apiBasePath}
-          additionalHeaders={additionalHeaders}
+          additionalHeaders={mergedHeaders}
           appId={appId}
           screenSize={getScreenSize()}
           locale={validLocale}
@@ -148,7 +159,7 @@ export function MaterialFeedbackButton({
           onClose={() => setDialogOpen(false)}
           meta={meta}
           apiBasePath={apiBasePath}
-          additionalHeaders={additionalHeaders}
+          additionalHeaders={mergedHeaders}
           appId={appId}
           formAsDialog={formAsDialog}
           screenSize={getScreenSize()}
