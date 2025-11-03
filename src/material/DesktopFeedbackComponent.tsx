@@ -1,6 +1,4 @@
-"use client";
-import React, { useRef, useState, useCallback, useMemo } from "react";
-import dynamic from "next/dynamic";
+import React, { useRef, useState, useCallback, useMemo, lazy, Suspense } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Drawer from "@mui/material/Drawer";
@@ -16,10 +14,7 @@ import * as yup from "yup";
 import toast from "react-hot-toast";
 import { getTranslations, type Locale } from "../locales";
 
-const CanvasDraw = dynamic(() => import("react-canvas-draw"), {
-  ssr: false,
-  loading: () => <div>Loading canvas...</div>,
-});
+const CanvasDraw = lazy(() => import("react-canvas-draw"));
 
 export interface DesktopFeedbackComponentProps {
   open: boolean;
@@ -538,16 +533,18 @@ export function DesktopFeedbackComponent({
                   height: Math.floor(typeof window !== "undefined" ? window.innerHeight * 0.9 : 800),
                   pointerEvents: "auto",
                 }}>
-                  <CanvasDraw
-                    ref={canvasRef}
-                    canvasWidth={Math.floor(typeof window !== "undefined" ? window.innerWidth : 1200)}
-                    canvasHeight={Math.floor(typeof window !== "undefined" ? window.innerHeight * 0.9 : 800)}
-                    brushColor="#ff0000"
-                    brushRadius={3}
-                    lazyRadius={0}
-                    hideGrid
-                    backgroundColor="transparent"
-                  />
+                  <Suspense fallback={<div>Loading canvas...</div>}>
+                    <CanvasDraw
+                      ref={canvasRef}
+                      canvasWidth={Math.floor(typeof window !== "undefined" ? window.innerWidth : 1200)}
+                      canvasHeight={Math.floor(typeof window !== "undefined" ? window.innerHeight * 0.9 : 800)}
+                      brushColor="#ff0000"
+                      brushRadius={3}
+                      lazyRadius={0}
+                      hideGrid
+                      backgroundColor="transparent"
+                    />
+                  </Suspense>
                 </Box>
               </Box>
             </>

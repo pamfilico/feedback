@@ -1,17 +1,11 @@
-"use client";
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import dynamic from "next/dynamic";
+import React, { useRef, useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Button, TextField, MenuItem, FormControl, InputLabel, Select, Box, Typography, Paper } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-// Dynamic imports to avoid SSR issues
-const CanvasDraw = dynamic(() => import("react-canvas-draw"), {
-  ssr: false,
-  loading: () => <div>Loading canvas...</div>,
-});
+const CanvasDraw = lazy(() => import("react-canvas-draw"));
 
 // Validation schema for the form
 const validationSchema = yup.object({
@@ -205,18 +199,20 @@ export default function DesktopEditFeedbackComponent({ feedback, onUpdate, onCan
                       pointerEvents: "auto",
                     }}
                   >
-                    <CanvasDraw
-                      ref={canvasRef}
-                      canvasWidth={dimensions.width}
-                      canvasHeight={dimensions.height}
-                      brushColor="#ff0000"
-                      brushRadius={5}
-                      lazyRadius={0}
-                      hideGrid={true}
-                      saveData={savedDrawingData || ""}
-                      backgroundColor="transparent"
-                      immediateLoading={true}
-                    />
+                    <Suspense fallback={<div>Loading canvas...</div>}>
+                      <CanvasDraw
+                        ref={canvasRef}
+                        canvasWidth={dimensions.width}
+                        canvasHeight={dimensions.height}
+                        brushColor="#ff0000"
+                        brushRadius={5}
+                        lazyRadius={0}
+                        hideGrid={true}
+                        saveData={savedDrawingData || ""}
+                        backgroundColor="transparent"
+                        immediateLoading={true}
+                      />
+                    </Suspense>
                   </Box>
                 </Box>
               </Box>

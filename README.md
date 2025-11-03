@@ -1,24 +1,37 @@
 # @pamfilico/feedback
 
-A collection of feedback components for various UI frameworks.
+A pure React feedback component library for Material UI. Works with any React framework (Next.js, Vite, Create React App, Remix, etc.).
 
 ## Installation
 
-### React 19 / Next.js 15+ Projects
-
-Due to peer dependency constraints with `react-canvas-draw` (which currently supports React 16-17), you need to install with the `--legacy-peer-deps` flag:
-
-```bash
-npm install @pamfilico/feedback --legacy-peer-deps
-```
-
-**Note:** The package works perfectly fine with React 19 at runtime. The flag is only needed because `react-canvas-draw` hasn't updated its peer dependency requirements yet.
-
-### React 18 / Next.js 14 Projects
+### All React Projects (18 or 19)
 
 ```bash
 npm install @pamfilico/feedback
+npm install react-canvas-draw
 ```
+
+**Note:** Starting with v2.1.0, `react-canvas-draw` is no longer bundled and must be installed separately in your project. This gives you more control over versioning and allows you to apply any necessary patches for React 19 compatibility.
+
+For React 19 projects, you may need to install `react-canvas-draw` with the `--legacy-peer-deps` flag:
+
+```bash
+npm install react-canvas-draw --legacy-peer-deps
+```
+
+### Migrating from v2.0.x to v2.1.0
+
+Version 2.1.0 removes Next.js as a dependency, making this a pure React library:
+
+**What changed:**
+- Removed Next.js dependency (no longer required)
+- Removed `react-canvas-draw` from package dependencies (install separately)
+- Replaced Next.js-specific code with standard React patterns
+
+**Action required:**
+1. Install `react-canvas-draw` in your project: `npm install react-canvas-draw`
+2. If using React 19, add `--legacy-peer-deps` flag when installing react-canvas-draw
+3. No code changes needed in your application - the API remains exactly the same
 
 ## Quick Start
 

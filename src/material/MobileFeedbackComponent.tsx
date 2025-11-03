@@ -1,6 +1,4 @@
-"use client";
-import React, { useRef, useState, useCallback, useMemo } from "react";
-import dynamic from "next/dynamic";
+import React, { useRef, useState, useCallback, useMemo, lazy, Suspense } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Drawer from "@mui/material/Drawer";
@@ -16,10 +14,7 @@ import * as yup from "yup";
 import toast from "react-hot-toast";
 import { getTranslations, type Locale } from "../locales";
 
-const CanvasDraw = dynamic(() => import("react-canvas-draw"), {
-  ssr: false,
-  loading: () => <div>Loading canvas...</div>,
-});
+const CanvasDraw = lazy(() => import("react-canvas-draw"));
 
 export interface MobileFeedbackComponentProps {
   open: boolean;
@@ -327,16 +322,18 @@ export function MobileFeedbackComponent({
                   height: dimensions.height,
                   pointerEvents: "auto",
                 }}>
-                  <CanvasDraw
-                    ref={canvasRef}
-                    canvasWidth={dimensions.width}
-                    canvasHeight={dimensions.height}
-                    brushColor="#ff0000"
-                    brushRadius={2}
-                    lazyRadius={0}
-                    hideGrid
-                    backgroundColor="transparent"
-                  />
+                  <Suspense fallback={<div>Loading canvas...</div>}>
+                    <CanvasDraw
+                      ref={canvasRef}
+                      canvasWidth={dimensions.width}
+                      canvasHeight={dimensions.height}
+                      brushColor="#ff0000"
+                      brushRadius={2}
+                      lazyRadius={0}
+                      hideGrid
+                      backgroundColor="transparent"
+                    />
+                  </Suspense>
                 </Box>
               </Box>
             </>
