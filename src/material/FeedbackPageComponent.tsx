@@ -83,8 +83,9 @@ export default function FeedbackPageComponent({
         limit: "20",
       });
 
+      const separator = fetchFeedbacksUrl.includes('?') ? '&' : '?';
       const response = await axios.get(
-        `${fetchFeedbacksUrl}?${params.toString()}`,
+        `${fetchFeedbacksUrl}${separator}${params.toString()}`,
         {
           headers: additionalHeaders,
         }
