@@ -35,6 +35,9 @@ interface Feedback {
   material_ui_screensize: string | null;
   created_at: string;
   last_updated: string;
+  gitlab_issue_iid?: string | null;
+  gitlab_issue_url?: string | null;
+  gitlab_project_id?: string | null;
 }
 
 interface PaginationMeta {
@@ -56,6 +59,7 @@ interface FeedbackPageComponentProps {
   editingUrl?: string; // Optional: Base URL for edit operations (GET/PUT). feedbackId will be appended automatically
   onClickEditButtonFeedbackItem?: (feedbackId: string) => void;
   additionalHeaders?: Record<string, string>;
+  renderBottomRightComponent?: (feedback: Feedback) => React.ReactNode;
 }
 
 export default function FeedbackPageComponent({
@@ -63,6 +67,7 @@ export default function FeedbackPageComponent({
   editingUrl,
   onClickEditButtonFeedbackItem,
   additionalHeaders = {},
+  renderBottomRightComponent,
 }: FeedbackPageComponentProps) {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState(true);
@@ -159,6 +164,11 @@ export default function FeedbackPageComponent({
                     <FeedbackCardVariant1
                       feedback={feedback}
                       handleEditClick={handleEditClick}
+                      bottomRightComponent={
+                        renderBottomRightComponent
+                          ? renderBottomRightComponent(feedback)
+                          : undefined
+                      }
                     />
                   </ListItem>
                 ))}

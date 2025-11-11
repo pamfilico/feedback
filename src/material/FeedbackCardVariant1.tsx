@@ -27,11 +27,15 @@ interface Feedback {
   material_ui_screensize: string | null;
   created_at: string;
   last_updated: string;
+  gitlab_issue_iid?: string | null;
+  gitlab_issue_url?: string | null;
+  gitlab_project_id?: string | null;
 }
 
-interface FeedbackCardVariant1Props {
+export interface FeedbackCardVariant1Props {
   feedback: Feedback;
   handleEditClick: (feedback: Feedback) => void;
+  bottomRightComponent?: React.ReactNode;
 }
 
 const getTypeColor = (type: string): "error" | "primary" | "default" => {
@@ -67,6 +71,7 @@ const formatDate = (dateString: string) => {
 export default function FeedbackCardVariant1({
   feedback,
   handleEditClick,
+  bottomRightComponent,
 }: FeedbackCardVariant1Props) {
   return (
     <Card sx={{ width: "100%" }}>
@@ -79,8 +84,8 @@ export default function FeedbackCardVariant1({
             mb: 2,
           }}
         >
-          <Box>
-            <Box sx={{ display: "flex", gap: 1, mb: 1, flexWrap: "wrap" }}>
+          <Box sx={{ flex: 1 }}>
+            <Box sx={{ display: "flex", gap: 1, mb: 1, flexWrap: "wrap", alignItems: "center" }}>
               <Chip
                 label={feedback.type_of || "other"}
                 color={getTypeColor(feedback.type_of)}
@@ -100,6 +105,11 @@ export default function FeedbackCardVariant1({
                 variant="outlined"
                 color={feedback.user_email ? "primary" : "default"}
               />
+              {bottomRightComponent && (
+                <Box sx={{ ml: "auto" }}>
+                  {bottomRightComponent}
+                </Box>
+              )}
             </Box>
             <Typography variant="caption" display="block" color="text.secondary">
               {formatDate(feedback.created_at)}
