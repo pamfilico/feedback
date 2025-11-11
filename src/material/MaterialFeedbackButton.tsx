@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect, useMemo } from "react";
 import { Button, Box, useMediaQuery, useTheme } from "@mui/material";
 import FeedbackIcon from "@mui/icons-material/Feedback";
