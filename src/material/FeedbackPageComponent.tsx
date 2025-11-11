@@ -30,6 +30,7 @@ import MobileEditFeedbackComponent from "./MobileEditFeedbackComponent";
 interface Feedback {
   id: string;
   user_id: string | null;
+  user_email: string | null;
   type_of: string;
   message: string;
   image: string | null;
@@ -201,7 +202,7 @@ export default function FeedbackPageComponent({
                           }}
                         >
                           <Box>
-                            <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
+                            <Box sx={{ display: "flex", gap: 1, mb: 1, flexWrap: "wrap" }}>
                               <Chip
                                 label={feedback.type_of || "other"}
                                 color={getTypeColor(feedback.type_of)}
@@ -215,6 +216,12 @@ export default function FeedbackPageComponent({
                                   variant="outlined"
                                 />
                               )}
+                              <Chip
+                                label={feedback.user_email || "No email"}
+                                size="small"
+                                variant="outlined"
+                                color={feedback.user_email ? "primary" : "default"}
+                              />
                             </Box>
                             <Typography variant="caption" display="block" color="text.secondary">
                               {formatDate(feedback.created_at)}
