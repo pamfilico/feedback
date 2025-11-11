@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState, useCallback, useMemo, lazy, Suspense } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";

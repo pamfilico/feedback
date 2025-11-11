@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { Container, Typography } from "@mui/material";
 import axios from "axios";

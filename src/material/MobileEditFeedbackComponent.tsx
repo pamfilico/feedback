@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Button, TextField, MenuItem, FormControl, InputLabel, Select, Box, Typography, Paper } from "@mui/material";
 import { useFormik } from "formik";
